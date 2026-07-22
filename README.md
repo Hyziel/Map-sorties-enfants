@@ -15,7 +15,7 @@ Trois feuilles alimentent la carte :
 | --- | --- |
 | `Sorties` | Le recensement principal (genevafamily.ch, enrichi Google Places) |
 | `Nouveaux lieux trouvés` | Lieux ajoutés à la main, majoritairement géolocalisés |
-| `Services (hors sorties)` | Santé, espaces bébé et allaitement |
+| `Services (hors sorties)` | Santé et accueil parents-enfants |
 | `Méthode & lacunes` | Sources, champs manquants et alertes de fraîcheur |
 
 La feuille `Méthode & lacunes` n'est pas importée automatiquement : ses
@@ -56,6 +56,9 @@ data/activités.xlsx
   articles). La fiche la plus complète est conservée et complétée par l'autre.
 - **Filtre géographique.** Tout point hors de la boîte Genève + couronne est
   écarté : c'est le symptôme d'un géocodage tombé sur un homonyme.
+- **Exclusion de catégories.** `CATEGORIES_EXCLUES` retire les espaces bébé et
+  allaitement : ce sont des commodités d'aéroport, de gare ou de centre
+  commercial, pas des lieux de sortie. Les lignes restent dans le classeur.
 - **Alertes de fraîcheur** rattachées aux fiches concernées (musée fermé,
   équipements saisonniers, haltes-jeux fermées en vacances scolaires).
 

@@ -42,8 +42,12 @@ const CATEGORIES = {
   cafes: { label: 'Cafés & restaurants', emoji: '☕', couleur: '#d2ae97' },
   parents: { label: 'Accueil parents-enfants', emoji: '🤱', couleur: '#f2acc0' },
   sante: { label: 'Santé', emoji: '🏥', couleur: '#eb9f9a' },
-  bebe: { label: 'Espace bébé & allaitement', emoji: '🍼', couleur: '#f4bcd0' },
 };
+
+// Catégories reconnues à la lecture mais écartées de la carte : ce sont des
+// commodités (table à langer, salle d'allaitement) rattachées à un aéroport,
+// une gare ou un centre commercial, pas des lieux où l'on emmène un enfant.
+const CATEGORIES_EXCLUES = new Set(['bebe']);
 
 // Les trois feuilles n'utilisent pas le même vocabulaire ni la même casse.
 // Clé = libellé source en minuscules.
@@ -182,12 +186,18 @@ const SOURCES = [
 ];
 
 const lieux = [];
-const stats = { total: 0, geocodes: 0, sansGps: 0, doublons: 0, horsZone: 0 };
+const stats = { total: 0, geocodes: 0, sansGps: 0, doublons: 0, horsZone: 0, exclus: 0 };
 
 for (const { feuille, type, origine } of SOURCES) {
   for (const r of sheets[feuille] ?? []) {
     const nom = (r['Nom'] || '').trim();
     if (!nom) continue;
+
+    const cat = categorie(r['Catégorie'] || r['Catégorie suggérée'], nom);
+    if (CATEGORIES_EXCLUES.has(cat)) {
+      stats.exclus++;
+      continue;
+    }
     stats.total++;
 
     const adresse = (r['Adresse vérifiée (Google)'] || r['Adresse'] || '').trim();
@@ -214,7 +224,6 @@ for (const { feuille, type, origine } of SOURCES) {
     if (lat === null) stats.sansGps++;
     else if (precision !== 'exacte') stats.geocodes++;
 
-    const cat = categorie(r['Catégorie'] || r['Catégorie suggérée'], nom);
     const commune =
       (r['Commune'] || '').trim() ||
       /,\s*\d{4}\s+([^,]+)$/.exec(adresse)?.[1]?.trim() ||
@@ -325,5 +334,6 @@ writeFileSync(OUT, JSON.stringify(payload) + '\n');
 console.log(
   `${payload.stats.lieux} lieux écrits (${payload.stats.sorties} sorties, ${payload.stats.services} services)\n` +
     `  cartographiés : ${payload.stats.cartographies} — sans GPS : ${payload.stats.sansGps}\n` +
-    `  doublons fusionnés : ${stats.doublons} — points hors zone écartés : ${stats.horsZone}`
+    `  doublons fusionnés : ${stats.doublons} — points hors zone écartés : ${stats.horsZone}\n` +
+    `  écartés (espaces bébé & allaitement) : ${stats.exclus}`
 );
