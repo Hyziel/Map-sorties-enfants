@@ -362,10 +362,6 @@
   z-index: 1000;
 }
 
-.marqueur.approche {
-  border-style: dashed;
-}
-
 .leaflet-marker-icon .marqueur {
   transition: transform 0.12s;
 }

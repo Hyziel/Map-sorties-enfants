@@ -170,8 +170,8 @@ function icone(l: Lieu, actif = false): L.DivIcon {
   const couleur = donnees.categories[l.categorie]?.couleur ?? '#888';
   return L.divIcon({
     className: 'marqueur-conteneur',
-    html: `<span class="marqueur${actif ? ' actif' : ''}${
-      l.precision === 'approchee' ? ' approche' : ''
+    html: `<span class="marqueur${
+      actif ? ' actif' : ''
     }" style="--c:${couleur}"><i>${l.emoji}</i></span>`,
     iconSize: [34, 34],
     iconAnchor: [17, 34],

@@ -80,8 +80,8 @@ Les résultats, succès comme échecs, sont mis en cache dans
 adresses. Le service impose une requête par seconde : compter quelques minutes
 pour un lot complet.
 
-Les positions issues du géocodage sont signalées dans l'interface, marqueur en
-pointillés et mention dans la fiche quand seule la rue a pu être retrouvée.
+Les positions issues du géocodage sont signalées dans la fiche du lieu quand
+seule la rue a pu être retrouvée. Les marqueurs, eux, sont tous identiques.
 
 ## Limites connues
 
