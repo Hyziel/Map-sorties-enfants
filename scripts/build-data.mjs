@@ -8,9 +8,8 @@
 // rattachement des alertes de fraîcheur documentées dans la feuille "Méthode".
 
 import { readFileSync, writeFileSync, existsSync, mkdirSync } from 'node:fs';
-import { readSheets } from './xlsx.mjs';
+import { lireSources } from './sources.mjs';
 
-const XLSX = new URL('../data/activités.xlsx', import.meta.url);
 const CACHE = new URL('../data/geocache.json', import.meta.url);
 const OUT_DIR = new URL('../src/data/', import.meta.url);
 const OUT = new URL('lieux.json', OUT_DIR);
@@ -41,13 +40,15 @@ const CATEGORIES = {
   grillades: { label: 'Grillades & pique-nique', emoji: '🔥', couleur: '#eda58e' },
   cafes: { label: 'Cafés & restaurants', emoji: '☕', couleur: '#d2ae97' },
   parents: { label: 'Accueil parents-enfants', emoji: '🤱', couleur: '#f2acc0' },
-  sante: { label: 'Santé', emoji: '🏥', couleur: '#eb9f9a' },
 };
 
-// Catégories reconnues à la lecture mais écartées de la carte : ce sont des
-// commodités (table à langer, salle d'allaitement) rattachées à un aéroport,
-// une gare ou un centre commercial, pas des lieux où l'on emmène un enfant.
-const CATEGORIES_EXCLUES = new Set(['bebe']);
+// Catégories reconnues à la lecture mais écartées de la carte : la carte vise
+// le loisir en famille.
+//   bebe , tables à langer et salles d'allaitement d'aéroport, de gare ou de
+//           centre commercial : des commodités, pas des destinations.
+//   sante, cliniques, consultations imad, gardes pédiatriques : on n'y va pas
+//           pour le plaisir.
+const CATEGORIES_EXCLUES = new Set(['bebe', 'sante']);
 
 // Les trois feuilles n'utilisent pas le même vocabulaire ni la même casse.
 // Clé = libellé source en minuscules.
@@ -176,20 +177,14 @@ const ALERTES = [
 /* Construction                                                        */
 /* ------------------------------------------------------------------ */
 
-const sheets = readSheets(XLSX);
 const cache = existsSync(CACHE) ? JSON.parse(readFileSync(CACHE, 'utf8')) : {};
-
-const SOURCES = [
-  { feuille: 'Sorties', type: 'sortie', origine: 'genevafamily' },
-  { feuille: 'Nouveaux lieux trouvés', type: 'sortie', origine: 'complement' },
-  { feuille: 'Services (hors sorties)', type: 'service', origine: 'genevafamily' },
-];
+const SOURCES = lireSources();
 
 const lieux = [];
 const stats = { total: 0, geocodes: 0, sansGps: 0, doublons: 0, horsZone: 0, exclus: 0 };
 
-for (const { feuille, type, origine } of SOURCES) {
-  for (const r of sheets[feuille] ?? []) {
+for (const { lignes, type, origine } of SOURCES) {
+  for (const r of lignes) {
     const nom = (r['Nom'] || '').trim();
     if (!nom) continue;
 
@@ -333,7 +328,7 @@ writeFileSync(OUT, JSON.stringify(payload) + '\n');
 
 console.log(
   `${payload.stats.lieux} lieux écrits (${payload.stats.sorties} sorties, ${payload.stats.services} services)\n` +
-    `  cartographiés : ${payload.stats.cartographies} — sans GPS : ${payload.stats.sansGps}\n` +
-    `  doublons fusionnés : ${stats.doublons} — points hors zone écartés : ${stats.horsZone}\n` +
-    `  écartés (espaces bébé & allaitement) : ${stats.exclus}`
+    `  cartographiés : ${payload.stats.cartographies}, sans GPS : ${payload.stats.sansGps}\n` +
+    `  doublons fusionnés : ${stats.doublons}, points hors zone écartés : ${stats.horsZone}\n` +
+    `  écartés (hors loisir : santé, espaces bébé) : ${stats.exclus}`
 );

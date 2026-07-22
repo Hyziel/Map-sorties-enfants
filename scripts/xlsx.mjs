@@ -8,7 +8,7 @@ import { inflateRawSync } from 'node:zlib';
 
 function unzip(buf) {
   // On lit l'End Of Central Directory, puis le Central Directory, qui donne
-  // l'offset de chaque fichier — plus fiable que scanner les entêtes locaux.
+  // l'offset de chaque fichier, plus fiable que scanner les entêtes locaux.
   let eocd = buf.length - 22;
   while (eocd >= 0 && buf.readUInt32LE(eocd) !== 0x06054b50) eocd--;
   if (eocd < 0) throw new Error('Archive ZIP invalide (EOCD introuvable)');

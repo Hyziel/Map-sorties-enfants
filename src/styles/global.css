@@ -1,11 +1,11 @@
 /* Palette pastel.
    Principe : les couleurs restent claires et poudrées, le texte reste sombre.
-   On ne pose jamais de blanc sur un pastel — le contraste ne suivrait pas.
+   On ne pose jamais de blanc sur un pastel, le contraste ne suivrait pas.
    Les aplats colorés portent donc toujours l'encre foncée. */
 
 :root {
-  --accent: #f6a9a0; /* corail poudré — aplats et surbrillances */
-  --accent-doux: #fdeceb; /* teinte très claire — fonds discrets */
+  --accent: #f6a9a0; /* corail poudré, aplats et surbrillances */
+  --accent-doux: #fdeceb; /* teinte très claire, fonds discrets */
   --accent-fort: #b05f57; /* version lisible en texte sur fond clair */
 
   --encre: #3b332e;
@@ -29,8 +29,12 @@
   --ombre-forte: 0 8px 34px rgb(90 70 60 / 0.18);
 }
 
+/* Le thème suit le système par défaut. Le bouton de la barre pose
+   data-theme="clair" ou "sombre" sur <html>, qui l'emporte dans les deux sens.
+   Les deux blocs ci-dessous partagent la même liste de variables. */
+
 @media (prefers-color-scheme: dark) {
-  :root {
+  :root:not([data-theme='clair']) {
     /* En sombre les pastels sont assombris et le texte redevient clair. */
     --accent: #e79c93;
     --accent-doux: #3a2a27;
@@ -54,6 +58,31 @@
     --ombre: 0 1px 2px rgb(0 0 0 / 0.4), 0 4px 16px rgb(0 0 0 / 0.32);
     --ombre-forte: 0 8px 34px rgb(0 0 0 / 0.5);
   }
+}
+
+/* Sombre demandé explicitement, quel que soit le réglage du système. */
+:root[data-theme='sombre'] {
+  --accent: #e79c93;
+  --accent-doux: #3a2a27;
+  --accent-fort: #f3b3aa;
+
+  --encre: #f0e9e3;
+  --encre-doux: #a89e95;
+  --fond: #1c1a18;
+  --carte: #262322;
+  --bord: #3a3532;
+  --bord-fort: #4d4640;
+  --surlignage: #3a2a27;
+
+  --alerte-fond: #3d221c;
+  --alerte-bord: #7d4335;
+  --alerte-texte: #f5b8a6;
+  --info-fond: #1e2b3a;
+  --info-bord: #37536f;
+  --info-texte: #aecbe9;
+
+  --ombre: 0 1px 2px rgb(0 0 0 / 0.4), 0 4px 16px rgb(0 0 0 / 0.32);
+  --ombre-forte: 0 8px 34px rgb(0 0 0 / 0.5);
 }
 
 * {

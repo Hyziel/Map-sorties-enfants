@@ -769,5 +769,165 @@
   "Au pied des immeubles, divers quartiers de Vernier": null,
   "Rue des Boudines 2, 1217 Meyrin (adresse administrative)": null,
   "Meyrin (via service petite enfance, Rue des Boudines 2)": null,
-  "Plan-les-Ouates (adresse à confirmer)": null
+  "Plan-les-Ouates (adresse à confirmer)": null,
+  "01210 Ferney-Voltaire": {
+    "lat": 46.2567057,
+    "lon": 6.1096409,
+    "precision": "exacte",
+    "matched": "Ferney-Voltaire, Gex, Ain, Auvergne-Rhône-Alpes, France métropolitaine, 01210, France"
+  },
+  "3 rue Lafayette, 01630 Saint-Genis-Pouilly": {
+    "lat": 46.245691,
+    "lon": 6.0257512,
+    "precision": "exacte",
+    "matched": "3, Rue Lafayette, Saint-Genis-Pouilly, Gex, Ain, Auvergne-Rhône-Alpes, France métropolitaine, 01630, France"
+  },
+  "Lac de Divonne, 01220 Divonne-les-Bains": {
+    "lat": 46.3612018,
+    "lon": 6.1477751,
+    "precision": "rue",
+    "matched": "Le Clos du Lac, Plan, Vésenex, Divonne-les-Bains, Gex, Ain, Auvergne-Rhône-Alpes, France métropolitaine, 01220, France"
+  },
+  "01280 Prévessin-Moëns": {
+    "lat": 46.257389,
+    "lon": 6.0873747,
+    "precision": "exacte",
+    "matched": "Prévessin-Moëns, Prévessin, Gex, Ain, Auvergne-Rhône-Alpes, France métropolitaine, 01280, France"
+  },
+  "Esplanade du Lac, 181 avenue de la Plage, 01220 Divonne-les-Bains": null,
+  "01630 Saint-Genis-Pouilly": {
+    "lat": 46.243244,
+    "lon": 6.0207779,
+    "precision": "exacte",
+    "matched": "Saint-Genis-Pouilly, Gex, Ain, Auvergne-Rhône-Alpes, France métropolitaine, 01630, France"
+  },
+  "01170 Gex": {
+    "lat": 46.327854,
+    "lon": 6.0349421,
+    "precision": "exacte",
+    "matched": "01170, Gex, Ain, Auvergne-Rhône-Alpes, France métropolitaine, France"
+  },
+  "Rue Dame Pernette, 01410 Mijoux": {
+    "lat": 46.3683784,
+    "lon": 6.0010816,
+    "precision": "rue",
+    "matched": "Rue Dame Pernette, La Vieille Faucille, Mijoux, Gex, Ain, Auvergne-Rhône-Alpes, France métropolitaine, 01410, France"
+  },
+  "482 route de Péron, 01630 Péron": {
+    "lat": 46.1846437,
+    "lon": 5.9211703,
+    "precision": "rue",
+    "matched": "Route de Péron, Logras, Péron, Gex, Ain, Auvergne-Rhône-Alpes, France métropolitaine, 01630, France"
+  },
+  "01550 Pougny": {
+    "lat": 46.1390374,
+    "lon": 5.9509954,
+    "precision": "exacte",
+    "matched": "Pougny, Gex, Ain, Auvergne-Rhône-Alpes, France métropolitaine, 01550, France"
+  },
+  "62 esplanade du Môle, 01280 Prévessin-Moëns": {
+    "lat": 46.2535894,
+    "lon": 6.0827401,
+    "precision": "rue",
+    "matched": "Esplanade du Môle, Prévessin-Moëns, Prévessin, Gex, Ain, Auvergne-Rhône-Alpes, France métropolitaine, 01280, France"
+  },
+  "153 rue du Champ de Foire, 01630 Saint-Jean-de-Gonville": {
+    "lat": 46.2116413,
+    "lon": 5.9531745,
+    "precision": "rue",
+    "matched": "Rue du Champ de Foire, Saint-Jean-de-Gonville, Gex, Ain, Auvergne-Rhône-Alpes, France métropolitaine, 01630, France"
+  },
+  "236 Les Passereaux, 01220 Sauverny": null,
+  "18 route de Thoiry, 01630 Sergy": {
+    "lat": 46.2509769,
+    "lon": 5.997494,
+    "precision": "rue",
+    "matched": "Route de Thoiry, Sergy, Gex, Ain, Auvergne-Rhône-Alpes, France métropolitaine, 01630, France"
+  },
+  "Rue du Breu, 01710 Thoiry": {
+    "lat": 46.2324647,
+    "lon": 5.9807621,
+    "precision": "rue",
+    "matched": "Rue du Breu, Gremaz, Thoiry, Gex, Ain, Auvergne-Rhône-Alpes, France métropolitaine, 01710, France"
+  },
+  "21 chemin Levé, 01210 Versonnex": {
+    "lat": 46.304603,
+    "lon": 6.098171,
+    "precision": "exacte",
+    "matched": "21, Chemin Levé, Les Genévriers, Versonnex, Gex, Ain, Auvergne-Rhône-Alpes, France métropolitaine, 01210, France"
+  },
+  "463 rue de la Treille, 01630 Challex": {
+    "lat": 46.180132,
+    "lon": 5.969443,
+    "precision": "exacte",
+    "matched": "463, Rue de la Treille, Les Baraques, Challex, Gex, Ain, Auvergne-Rhône-Alpes, France métropolitaine, 01630, France"
+  },
+  "01210 Versonnex": {
+    "lat": 46.3031461,
+    "lon": 6.096873,
+    "precision": "exacte",
+    "matched": "Versonnex, Gex, Ain, Auvergne-Rhône-Alpes, France métropolitaine, 01210, France"
+  },
+  "20 rue René Cassin, 01630 Saint-Genis-Pouilly": {
+    "lat": 46.2429231,
+    "lon": 6.0325971,
+    "precision": "exacte",
+    "matched": "Centre Aquatique Au Fil de l'O, 20, Rue René Cassin, Saint-Genis-Pouilly, Gex, Ain, Auvergne-Rhône-Alpes, France métropolitaine, 01630, France"
+  },
+  "228 avenue des Alpes, 01170 Gex": {
+    "lat": 46.3341327,
+    "lon": 6.0643582,
+    "precision": "exacte",
+    "matched": "Centre Socioculturel Les Libellules, 228, Avenue des Alpes, Gex, Ain, Auvergne-Rhône-Alpes, France métropolitaine, 01170, France"
+  },
+  "15 avenue des Sports, 01210 Ferney-Voltaire": {
+    "lat": 46.2621613,
+    "lon": 6.1153494,
+    "precision": "exacte",
+    "matched": "15, Avenue des Sports, Ferney-Voltaire, Gex, Ain, Auvergne-Rhône-Alpes, France métropolitaine, 01210, France"
+  },
+  "165 place Georges Charpak, 01170 Gex": {
+    "lat": 46.3362883,
+    "lon": 6.0655404,
+    "precision": "rue",
+    "matched": "Place Georges Charpak, Gex, Ain, Auvergne-Rhône-Alpes, France métropolitaine, 01170, France"
+  },
+  "01210 Ornex": {
+    "lat": 46.2779701,
+    "lon": 6.1003851,
+    "precision": "exacte",
+    "matched": "01210, Ornex, Gex, Ain, Auvergne-Rhône-Alpes, France métropolitaine, France"
+  },
+  "1607 route de Pougny, 01630 Péron": {
+    "lat": 46.1727615,
+    "lon": 5.9279873,
+    "precision": "rue",
+    "matched": "Route de Pougny, Logras, Péron, Gex, Ain, Auvergne-Rhône-Alpes, France métropolitaine, 01630, France"
+  },
+  "Fort l'Écluse, Pays de Gex": null,
+  "Jardin du château, 01210 Ferney-Voltaire": null,
+  "34 rue du Mont-Blanc, 01630 Saint-Genis-Pouilly": {
+    "lat": 46.2549495,
+    "lon": 6.0277533,
+    "precision": "exacte",
+    "matched": "34, Rue du Mont Blanc, Pregnin, Saint-Genis-Pouilly, Gex, Ain, Auvergne-Rhône-Alpes, France métropolitaine, 01630, France"
+  },
+  "Avenue des Sports, 01210 Ferney-Voltaire": {
+    "lat": 46.262705,
+    "lon": 6.1155376,
+    "precision": "rue",
+    "matched": "Avenue des Sports, Ferney-Voltaire, Gex, Ain, Auvergne-Rhône-Alpes, France métropolitaine, 01210, France"
+  },
+  "31 rue Georges Charpak, 01170 Gex": {
+    "lat": 46.3368617,
+    "lon": 6.0666949,
+    "precision": "rue",
+    "matched": "Rue Georges Charpak, Gex, Ain, Auvergne-Rhône-Alpes, France métropolitaine, 01170, France"
+  },
+  "01170 Cessy": {
+    "lat": 46.3181308,
+    "lon": 6.0691189,
+    "precision": "exacte",
+    "matched": "Cessy, Gex, Ain, Auvergne-Rhône-Alpes, France métropolitaine, 01170, France"
+  }
 }

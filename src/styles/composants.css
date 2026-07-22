@@ -225,6 +225,36 @@
   color: var(--encre-doux);
 }
 
+/* --- Bouton de bascule clair / sombre --- */
+
+.bascule-theme {
+  position: fixed;
+  right: 0.75rem;
+  bottom: 0.75rem;
+  z-index: 950;
+  display: grid;
+  place-items: center;
+  width: 2.6rem;
+  height: 2.6rem;
+  padding: 0;
+  border: 1px solid var(--bord-fort);
+  border-radius: 50%;
+  background: var(--carte);
+  box-shadow: var(--ombre);
+  font-size: 1.1rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.bascule-theme:hover {
+  border-color: var(--accent);
+}
+
+/* Sur la carte, les contrôles de zoom Leaflet occupent déjà ce coin. */
+.grille ~ .bascule-theme {
+  bottom: 5.5rem;
+}
+
 /* --- Bulle compacte au clic sur un marqueur --- */
 
 .popup-mini .leaflet-popup-content-wrapper {

@@ -2,158 +2,93 @@
 import Base from '../layouts/Base.astro';
 import donnees from '../data/lieux.json';
 
-const { stats, genereLe, verifieLe } = donnees;
+const { stats, verifieLe } = donnees;
 
-// Limites connues, reprises de la feuille « Méthode & lacunes » du classeur.
-const lacunes = [
-  {
-    champ: 'Site web',
-    etat: 'manquant',
-    detail: "Non fourni par Google Places. À compléter site officiel par site officiel.",
-  },
-  {
-    champ: 'Tarif précis',
-    etat: 'manquant',
-    detail: "Seule la mention gratuit / payant est connue pour la plupart des lieux.",
-  },
-  {
-    champ: 'Accessibilité poussette et PMR',
-    etat: 'manquant',
-    detail: "Aucune base structurée n'existe pour le canton.",
-  },
-  {
-    champ: 'Transports TPG',
-    etat: 'manquant',
-    detail: 'Calculable depuis les coordonnées et les données ouvertes TPG, pas encore fait.',
-  },
-];
-
-const alertes = [
-  {
-    titre: "Muséum d'histoire naturelle",
-    texte:
-      "Fermé depuis janvier 2024 pour une infestation de vrillettes. Réouverture progressive annoncée dès 2028, complète en 2036. Il reste listé comme ouvert sur plusieurs sites d'agenda.",
-  },
-  {
-    titre: 'Espaces parents-enfants et haltes-jeux',
-    texte:
-      'La plupart ferment pendant les vacances scolaires. Vérifiez la période avant de vous déplacer.',
-  },
-  {
-    titre: 'Pataugeoires et jeux d\'eau',
-    texte:
-      "Saisonniers, ouverts l'été. Les 18 entrées de la carte n'ont pas été vérifiées une à une.",
-  },
-  {
-    titre: 'Espaces de grillades de la Ville de Genève',
-    texte: 'Ouverts de fin mai à septembre uniquement.',
-  },
-  {
-    titre: 'Horaires',
-    texte:
-      "Ceux qui viennent de Google Places sont maintenus par les établissements eux-mêmes et dérivent souvent. Ils n'ont pas été revérifiés par téléphone.",
-  },
-];
+// « 2026-07-22 » se lit mal dans une phrase : on écrit « 22 juillet 2026 ».
+const dateVerif = new Intl.DateTimeFormat('fr-CH', {
+  day: 'numeric',
+  month: 'long',
+  year: 'numeric',
+}).format(new Date(`${verifieLe}T12:00:00`));
 ---
 
 <Base
-  titre="D'où viennent ces données — Sorties enfants Genève"
-  description="Sources, méthode de collecte et limites connues des données de la carte des sorties enfants à Genève."
+  titre="À propos des sorties enfants à Genève"
+  description="Une carte des sorties pour enfants à Genève, faite par des parents pour d'autres parents."
 >
   <article class="page">
     <p class="retour"><a href="/">← Retour à la carte</a></p>
 
-    <h1>D'où viennent ces données&nbsp;?</h1>
+    <h1>Pourquoi cette carte&nbsp;?</h1>
 
     <p class="chapeau">
-      Cette carte rassemble {stats.lieux} lieux du canton de Genève&nbsp;: {stats.sorties} sorties
-      et {stats.services} services aux familles. {stats.cartographies} sont positionnés sur la carte,
-      {stats.sansGps} n'ont pas pu l'être.
+      Nous sommes un couple avec des enfants en bas âge. Comme beaucoup de familles à Genève,
+      nous passions nos vendredis soir à chercher quoi faire le week-end.
     </p>
 
-    <h2>Sources</h2>
-    <dl class="sources">
-      <div>
-        <dt>Nom, catégorie, âge, tarif, adresse</dt>
-        <dd>
-          Recensement à partir de <strong>genevafamily.ch</strong>, complété à la main. Les tags y
-          sont tronqués après trois entrées&nbsp;: certains lieux ont donc moins de mots-clés
-          qu'en réalité.
-        </dd>
-      </div>
-      <div>
-        <dt>Coordonnées, téléphone, horaires</dt>
-        <dd>
-          <strong>Google Places</strong> pour une partie des lieux, puis
-          <strong>Nominatim / OpenStreetMap</strong> pour géocoder les adresses restantes. Une
-          position issue du géocodage est signalée dans la fiche&nbsp;; quand seule la rue a pu être
-          retrouvée, le marqueur est tracé en pointillés.
-        </dd>
-      </div>
-      <div>
-        <dt>Notes et avis Google</dt>
-        <dd>
-          Volontairement écartés. Le classeur en contient pour une partie des
-          lieux&nbsp;: ils ne sont pas affichés, une sortie en famille ne se choisissant pas au
-          nombre d'étoiles.
-        </dd>
-      </div>
-      <div>
-        <dt>Fond de carte</dt>
-        <dd>OpenStreetMap, tuiles CARTO Voyager.</dd>
-      </div>
-    </dl>
-
-    <h2>Ce qui manque encore</h2>
-    <ul class="lacunes">
-      {
-        lacunes.map((l) => (
-          <li>
-            <strong>{l.champ}</strong>
-            <span>{l.detail}</span>
-          </li>
-        ))
-      }
-    </ul>
-
-    <h2>À vérifier avant de partir</h2>
     <p>
-      Ces points ont été contrôlés le {verifieLe}. Le reste de la liste n'a fait l'objet d'aucune
-      vérification d'existence ou d'ouverture&nbsp;: considérez la carte comme un point de départ,
-      pas comme une garantie.
+      Les bonnes adresses existent, mais elles sont éparpillées&nbsp;: un blog par-ci, un groupe
+      Facebook par-là, l'agenda d'une commune, le bouche-à-oreille à la sortie de la crèche. À
+      chaque fois les mêmes questions, et jamais au même endroit. Est-ce que c'est adapté à un
+      enfant de deux ans&nbsp;? C'est payant&nbsp;? On peut y aller s'il pleut&nbsp;? C'est loin en
+      transports&nbsp;?
     </p>
-    <ul class="alertes-liste">
-      {
-        alertes.map((a) => (
-          <li>
-            <strong>{a.titre}</strong>
-            <span>{a.texte}</span>
-          </li>
-        ))
-      }
-    </ul>
 
-    <h2>Corrections repérées</h2>
     <p>
-      Deux adresses erronées de genevafamily.ch ont été rectifiées&nbsp;: la
-      <em>Maison de la Créativité</em> (chemin Calandrini 7, 1231 Chêne-Bougeries, et non chemin de
-      la Gradelle) et le <em>cinéma Bio</em> de Carouge (donné à Confignon). Cinq doublons ont été
-      fusionnés.
+      Alors nous avons rassemblé ce que nous trouvions sur une seule carte. Au début c'était un
+      tableur pour nous, puis il a grossi, et il nous a paru dommage de le garder pour nous.
+      Aujourd'hui il compte <strong>{stats.lieux} lieux</strong> dans le canton de Genève et le Pays
+      de Gex voisin.
     </p>
 
-    <p class="pied">
-      Données générées le {genereLe}. Une erreur, un lieu oublié&nbsp;?
-      <a href="mailto:barbarin.louise@gmail.com">Signalez-le</a>.
+    <h2>Ce qu'on a voulu en faire</h2>
+
+    <p>
+      Une carte qui répond aux questions qu'on se pose vraiment, un dimanche matin, avec un enfant
+      qui tourne en rond dans le salon. On filtre par âge, par tarif, et selon qu'il faut rester à
+      l'abri ou qu'on peut sortir. Rien à installer, pas de compte à créer.
     </p>
+
+    <p>
+      Nous n'affichons pas les notes Google. Une sortie en famille ne se choisit pas au nombre
+      d'étoiles, et un parc désert un mardi matin vaut parfois mieux qu'un lieu très bien noté et
+      bondé. Nous avons aussi écarté les cliniques, les pédiatres et les salles d'allaitement de
+      centres commerciaux&nbsp;: ce sont des services utiles, mais ce ne sont pas des sorties.
+    </p>
+
+    <h2>Ce qu'il faut savoir avant de partir</h2>
+
+    <p>
+      Nous faisons ça sur notre temps libre, et nous n'avons pas pu appeler les {stats.lieux} lieux
+      un par un. Considérez la carte comme un point de départ, pas comme une garantie&nbsp;:
+      <strong>vérifiez les horaires avant de vous déplacer</strong>, surtout pour les endroits
+      saisonniers.
+    </p>
+
+    <p>
+      Quand nous savons qu'un lieu est fermé, saisonnier, ou qu'il ferme pendant les vacances
+      scolaires, c'est indiqué directement sur sa fiche. Ces points-là ont été vérifiés le
+      {dateVerif}. Certaines adresses n'ont pas pu être localisées précisément&nbsp;; elles
+      apparaissent dans la liste sans être placées sur la carte, et les positions approximatives
+      sont signalées.
+    </p>
+
+    <h2>Écrivez-nous</h2>
+
+    <p>
+      Un lieu qui manque, une adresse fausse, un endroit qui a fermé&nbsp;? C'est comme ça que la
+      carte s'améliore. <a href="mailto:barbarin.louise@gmail.com">Écrivez-nous</a>, on lit tout.
+    </p>
+
   </article>
 </Base>
 
 <style>
   .page {
-    max-width: 44rem;
+    max-width: 40rem;
     margin: 0 auto;
-    padding: 1.5rem clamp(1rem, 5vw, 2rem) 4rem;
-    line-height: 1.65;
+    padding: 1.5rem clamp(1rem, 5vw, 2rem) 5rem;
+    line-height: 1.7;
   }
 
   .retour a {
@@ -163,68 +98,27 @@ const alertes = [
   }
 
   h1 {
-    font-size: clamp(1.5rem, 5vw, 2rem);
+    font-size: clamp(1.6rem, 5vw, 2.1rem);
     line-height: 1.15;
-    margin: 0.5rem 0 1rem;
+    margin: 0.6rem 0 1rem;
+    letter-spacing: -0.02em;
   }
 
   h2 {
-    margin: 2.2rem 0 0.7rem;
-    font-size: 1.15rem;
+    margin: 2.4rem 0 0.6rem;
+    font-size: 1.2rem;
+  }
+
+  p {
+    margin: 0 0 1rem;
   }
 
   .chapeau {
-    font-size: 1.05rem;
-    color: var(--encre-doux);
-  }
-
-  .sources {
-    margin: 0;
-    display: grid;
-    gap: 1rem;
-  }
-
-  .sources dt {
-    font-weight: 800;
-  }
-
-  .sources dd {
-    margin: 0.15rem 0 0;
-    color: var(--encre-doux);
-  }
-
-  .lacunes,
-  .alertes-liste {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    display: grid;
-    gap: 0.6rem;
-  }
-
-  .lacunes li,
-  .alertes-liste li {
-    display: grid;
-    gap: 0.1rem;
-    padding: 0.65rem 0.85rem;
-    border: 1px solid var(--bord);
-    border-radius: var(--rayon-s);
-    background: var(--carte);
-  }
-
-  .alertes-liste li {
-    border-color: var(--alerte-bord);
-    background: var(--alerte-fond);
-  }
-
-  .lacunes span,
-  .alertes-liste span {
-    font-size: 0.9rem;
-    color: var(--encre-doux);
-  }
-
-  .alertes-liste span {
-    color: var(--alerte-texte);
+    font-size: 1.12rem;
+    font-weight: 600;
+    color: var(--encre);
+    padding-left: 0.9rem;
+    border-left: 3px solid var(--accent);
   }
 
   .pied {

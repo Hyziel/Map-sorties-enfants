@@ -9,6 +9,11 @@ couronne. Site statique (Astro + Leaflet), déployé sur Netlify.
 partir du classeur, jamais l'inverse : pour corriger un lieu, on modifie le
 classeur puis on relance le build.
 
+Un second fichier, `data/complement-pays-de-gex.csv`, ajoute les lieux relevés
+dans l'annuaire de Pays de Gex agglo. Il suit les mêmes colonnes que le
+classeur et vit à côté plutôt que dedans, pour ne pas avoir à réécrire le
+`.xlsx`. `scripts/sources.mjs` réunit les deux.
+
 Trois feuilles alimentent la carte :
 
 | Feuille | Contenu |
@@ -57,8 +62,9 @@ data/activités.xlsx
 - **Filtre géographique.** Tout point hors de la boîte Genève + couronne est
   écarté : c'est le symptôme d'un géocodage tombé sur un homonyme.
 - **Exclusion de catégories.** `CATEGORIES_EXCLUES` retire les espaces bébé et
-  allaitement : ce sont des commodités d'aéroport, de gare ou de centre
-  commercial, pas des lieux de sortie. Les lignes restent dans le classeur.
+  allaitement (commodités d'aéroport, de gare ou de centre commercial) ainsi
+  que la santé (cliniques, consultations imad, gardes pédiatriques). La carte
+  vise le loisir. Les lignes restent dans le classeur.
 - **Alertes de fraîcheur** rattachées aux fiches concernées (musée fermé,
   équipements saisonniers, haltes-jeux fermées en vacances scolaires).
 
@@ -66,7 +72,7 @@ data/activités.xlsx
 
 Environ un tiers des lieux n'avaient pas de coordonnées dans le classeur.
 `npm run geocode` interroge Nominatim (OpenStreetMap) en essayant plusieurs
-formulations de chaque adresse — les adresses suisses placent le numéro après
+formulations de chaque adresse, les adresses suisses placent le numéro après
 la rue, ce que Nominatim interprète mal.
 
 Les résultats, succès comme échecs, sont mis en cache dans
@@ -74,7 +80,7 @@ Les résultats, succès comme échecs, sont mis en cache dans
 adresses. Le service impose une requête par seconde : compter quelques minutes
 pour un lot complet.
 
-Les positions issues du géocodage sont signalées dans l'interface — marqueur en
+Les positions issues du géocodage sont signalées dans l'interface, marqueur en
 pointillés et mention dans la fiche quand seule la rue a pu être retrouvée.
 
 ## Limites connues

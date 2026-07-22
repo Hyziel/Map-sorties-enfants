@@ -1,5 +1,5 @@
 /**
- * Carte des sorties enfants — logique client.
+ * Carte des sorties enfants, logique client.
  *
  * Un seul jeu de données filtré alimente deux vues synchronisées : la liste et
  * la carte Leaflet. Sélectionner une fiche d'un côté la met en avant de l'autre.
@@ -296,8 +296,8 @@ function rendre(): void {
   const manquants = visibles.length - avecGps.length;
   elNoteCarte.textContent = manquants
     ? manquants > 1
-      ? `${manquants} lieux sans coordonnées ne sont pas affichés ici — ils figurent dans la liste.`
-      : "1 lieu sans coordonnées n'est pas affiché ici — il figure dans la liste."
+      ? `${manquants} lieux sans coordonnées ne sont pas affichés ici, ils figurent dans la liste.`
+      : "1 lieu sans coordonnées n'est pas affiché ici, il figure dans la liste."
     : '';
 
   // --- Carte ---

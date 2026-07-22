@@ -1,5 +1,5 @@
 // Géocode les adresses sans coordonnées via Nominatim (OpenStreetMap).
-// Résultats mis en cache dans data/geocache.json — relancer est sans risque,
+// Résultats mis en cache dans data/geocache.json, relancer est sans risque,
 // seules les adresses absentes du cache sont interrogées.
 //
 //   node scripts/geocode.mjs
@@ -7,20 +7,17 @@
 // Nominatim impose 1 requête/seconde max et un User-Agent identifiable.
 
 import { readFileSync, writeFileSync, existsSync } from 'node:fs';
-import { readSheets } from './xlsx.mjs';
+import { lireSources } from './sources.mjs';
 
 const UA = 'sorties-enfants-geneve/0.1 (carte des sorties famille, contact: barbarin.louise@gmail.com)';
 const CACHE = new URL('../data/geocache.json', import.meta.url);
-const XLSX = new URL('../data/activités.xlsx', import.meta.url);
 
 const cache = existsSync(CACHE) ? JSON.parse(readFileSync(CACHE, 'utf8')) : {};
 
-const sheets = readSheets(XLSX);
 const wanted = new Set();
 
-for (const [name, rows] of Object.entries(sheets)) {
-  if (name === 'Méthode & lacunes') continue;
-  for (const r of rows) {
+for (const { lignes } of lireSources()) {
+  for (const r of lignes) {
     if (r['Latitude'] && r['Longitude']) continue;
     const addr = (r['Adresse vérifiée (Google)'] || r['Adresse'] || '').trim();
     if (addr) wanted.add(addr);
@@ -102,7 +99,7 @@ for (const [i, addr] of todo.entries()) {
 
   if (i % 10 === 0 || i === todo.length - 1) {
     writeFileSync(CACHE, JSON.stringify(cache, null, 2) + '\n');
-    console.log(`  ${i + 1}/${todo.length} — ${ok} trouvées, ${fail} échecs`);
+    console.log(`  ${i + 1}/${todo.length}, ${ok} trouvées, ${fail} échecs`);
   }
 }
 
