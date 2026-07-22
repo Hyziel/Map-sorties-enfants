@@ -24,23 +24,25 @@ const BBOX = { latMin: 46.05, latMax: 46.4, lonMin: 5.85, lonMax: 6.35 };
 /* ------------------------------------------------------------------ */
 
 // Chaque catégorie canonique : libellé affiché, emoji, couleur du marqueur.
+// Teintes pastel, volontairement claires : l'interface pose toujours du texte
+// sombre par-dessus, jamais du blanc.
 const CATEGORIES = {
-  parcs: { label: 'Parcs & aires de jeux', emoji: '🌳', couleur: '#3f9142' },
-  eau: { label: "Pataugeoires & jeux d'eau", emoji: '💦', couleur: '#1f9bd1' },
-  sport: { label: 'Sport & piscines', emoji: '🏊', couleur: '#0f7a8f' },
-  couvert: { label: 'Jeux couverts', emoji: '🎪', couleur: '#d4562b' },
-  biblio: { label: 'Bibliothèques & ludothèques', emoji: '📚', couleur: '#8a5cb8' },
-  musees: { label: 'Musées & culture', emoji: '🏛️', couleur: '#a8842c' },
-  spectacles: { label: 'Théâtres & spectacles', emoji: '🎭', couleur: '#c23f7a' },
-  animaux: { label: 'Animaux', emoji: '🐐', couleur: '#7a6a3a' },
-  nature: { label: 'Balades & nature', emoji: '🥾', couleur: '#5b8c3e' },
-  ateliers: { label: 'Activités & ateliers', emoji: '🎨', couleur: '#e0761b' },
-  cinema: { label: 'Cinémas', emoji: '🎬', couleur: '#5a5f9e' },
-  grillades: { label: 'Grillades & pique-nique', emoji: '🔥', couleur: '#b5451f' },
-  cafes: { label: 'Cafés & restaurants', emoji: '☕', couleur: '#9c6644' },
-  parents: { label: 'Accueil parents-enfants', emoji: '🤱', couleur: '#d15f8f' },
-  sante: { label: 'Santé', emoji: '🏥', couleur: '#c0392b' },
-  bebe: { label: 'Espace bébé & allaitement', emoji: '🍼', couleur: '#d98cae' },
+  parcs: { label: 'Parcs & aires de jeux', emoji: '🌳', couleur: '#8fc79b' },
+  eau: { label: "Pataugeoires & jeux d'eau", emoji: '💦', couleur: '#8fcbe8' },
+  sport: { label: 'Sport & piscines', emoji: '🏊', couleur: '#7ec8c2' },
+  couvert: { label: 'Jeux couverts', emoji: '🎪', couleur: '#f5a58d' },
+  biblio: { label: 'Bibliothèques & ludothèques', emoji: '📚', couleur: '#b4a4dc' },
+  musees: { label: 'Musées & culture', emoji: '🏛️', couleur: '#dfc48d' },
+  spectacles: { label: 'Théâtres & spectacles', emoji: '🎭', couleur: '#eaa3c2' },
+  animaux: { label: 'Animaux', emoji: '🐐', couleur: '#c8ad87' },
+  nature: { label: 'Balades & nature', emoji: '🥾', couleur: '#aecb8d' },
+  ateliers: { label: 'Activités & ateliers', emoji: '🎨', couleur: '#f4bc85' },
+  cinema: { label: 'Cinémas', emoji: '🎬', couleur: '#a1abdd' },
+  grillades: { label: 'Grillades & pique-nique', emoji: '🔥', couleur: '#eda58e' },
+  cafes: { label: 'Cafés & restaurants', emoji: '☕', couleur: '#d2ae97' },
+  parents: { label: 'Accueil parents-enfants', emoji: '🤱', couleur: '#f2acc0' },
+  sante: { label: 'Santé', emoji: '🏥', couleur: '#eb9f9a' },
+  bebe: { label: 'Espace bébé & allaitement', emoji: '🍼', couleur: '#f4bcd0' },
 };
 
 // Les trois feuilles n'utilisent pas le même vocabulaire ni la même casse.
@@ -239,8 +241,8 @@ for (const { feuille, type, origine } of SOURCES) {
       tags: tags(r),
       telephone: (r['Téléphone'] || '').trim(),
       horaires: (r['Horaires'] || '').trim() === 'Non publiés' ? '' : (r['Horaires'] || '').trim(),
-      note: nombre(r['Note Google']),
-      nbAvis: nombre(r['Nb avis']),
+      // Les notes et nombres d'avis Google du classeur ne sont pas repris :
+      // choix éditorial, on ne classe pas les sorties par étoiles.
       site: (r['Site web'] || '').trim(),
       accessibilite: (r['Accessibilité poussette/PMR'] || '').trim(),
       remarque: (r['Remarque'] || '').trim(),
@@ -254,7 +256,7 @@ for (const { feuille, type, origine } of SOURCES) {
 // complète et en récupérant les champs manquants de l'autre.
 const parCle = new Map();
 const complet = (l) =>
-  (l.lat !== null ? 4 : 0) + (l.horaires ? 2 : 0) + (l.telephone ? 1 : 0) + (l.note ? 1 : 0);
+  (l.lat !== null ? 4 : 0) + (l.horaires ? 2 : 0) + (l.telephone ? 1 : 0) + (l.site ? 1 : 0);
 
 for (const l of lieux) {
   const k = `${l.type}:${cle(l.nom)}`;
@@ -276,10 +278,6 @@ for (const l of lieux) {
     garde.precision = autre.precision;
   }
   if (!garde.tags.length) garde.tags = autre.tags;
-  if (garde.note === null) {
-    garde.note = autre.note;
-    garde.nbAvis = autre.nbAvis;
-  }
   parCle.set(k, garde);
 }
 

@@ -1,45 +1,58 @@
-:root {
-  --orange: #f2683c;
-  --orange-fonce: #d2481d;
-  --encre: #23201d;
-  --encre-doux: #6a6259;
-  --fond: #fdfaf6;
-  --carte: #ffffff;
-  --bord: #e8e0d6;
-  --bord-fort: #d5cabb;
-  --surlignage: #fff3ec;
-  --alerte-fond: #fdeeea;
-  --alerte-bord: #f0b8a8;
-  --alerte-texte: #a3341a;
-  --info-fond: #eef4fb;
-  --info-bord: #b9d0e8;
-  --info-texte: #275180;
+/* Palette pastel.
+   Principe : les couleurs restent claires et poudrées, le texte reste sombre.
+   On ne pose jamais de blanc sur un pastel — le contraste ne suivrait pas.
+   Les aplats colorés portent donc toujours l'encre foncée. */
 
-  --rayon: 14px;
-  --rayon-s: 9px;
-  --ombre: 0 1px 2px rgb(35 32 29 / 0.06), 0 4px 14px rgb(35 32 29 / 0.06);
-  --ombre-forte: 0 6px 30px rgb(35 32 29 / 0.16);
+:root {
+  --accent: #f6a9a0; /* corail poudré — aplats et surbrillances */
+  --accent-doux: #fdeceb; /* teinte très claire — fonds discrets */
+  --accent-fort: #b05f57; /* version lisible en texte sur fond clair */
+
+  --encre: #3b332e;
+  --encre-doux: #7b7169;
+  --fond: #fdf9f5;
+  --carte: #ffffff;
+  --bord: #ece3da;
+  --bord-fort: #dcd0c4;
+  --surlignage: #fdeceb;
+
+  --alerte-fond: #fdeae6;
+  --alerte-bord: #f3bcae;
+  --alerte-texte: #9c4630;
+  --info-fond: #eaf1f8;
+  --info-bord: #bcd3ea;
+  --info-texte: #34597f;
+
+  --rayon: 16px;
+  --rayon-s: 11px;
+  --ombre: 0 1px 2px rgb(90 70 60 / 0.05), 0 4px 16px rgb(90 70 60 / 0.07);
+  --ombre-forte: 0 8px 34px rgb(90 70 60 / 0.18);
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --orange: #ff7d55;
-    --orange-fonce: #ff9a78;
-    --encre: #f2ece6;
-    --encre-doux: #a79f95;
-    --fond: #1a1816;
-    --carte: #232120;
-    --bord: #38332f;
-    --bord-fort: #4b443e;
-    --surlignage: #3a2a22;
-    --alerte-fond: #3b201a;
-    --alerte-bord: #7a3c2c;
-    --alerte-texte: #ffb49c;
-    --info-fond: #1c2a3a;
-    --info-bord: #35506e;
-    --info-texte: #a8c8ea;
-    --ombre: 0 1px 2px rgb(0 0 0 / 0.4), 0 4px 14px rgb(0 0 0 / 0.3);
-    --ombre-forte: 0 6px 30px rgb(0 0 0 / 0.5);
+    /* En sombre les pastels sont assombris et le texte redevient clair. */
+    --accent: #e79c93;
+    --accent-doux: #3a2a27;
+    --accent-fort: #f3b3aa;
+
+    --encre: #f0e9e3;
+    --encre-doux: #a89e95;
+    --fond: #1c1a18;
+    --carte: #262322;
+    --bord: #3a3532;
+    --bord-fort: #4d4640;
+    --surlignage: #3a2a27;
+
+    --alerte-fond: #3d221c;
+    --alerte-bord: #7d4335;
+    --alerte-texte: #f5b8a6;
+    --info-fond: #1e2b3a;
+    --info-bord: #37536f;
+    --info-texte: #aecbe9;
+
+    --ombre: 0 1px 2px rgb(0 0 0 / 0.4), 0 4px 16px rgb(0 0 0 / 0.32);
+    --ombre-forte: 0 8px 34px rgb(0 0 0 / 0.5);
   }
 }
 
@@ -68,11 +81,11 @@ select {
 }
 
 a {
-  color: var(--orange-fonce);
+  color: var(--accent-fort);
 }
 
 :focus-visible {
-  outline: 3px solid var(--orange);
+  outline: 3px solid var(--accent-fort);
   outline-offset: 2px;
   border-radius: 4px;
 }

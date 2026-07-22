@@ -44,8 +44,6 @@ interface Lieu {
   tags: string[];
   telephone: string;
   horaires: string;
-  note: number | null;
-  nbAvis: number | null;
   site: string;
   accessibilite: string;
   remarque: string;
@@ -207,17 +205,54 @@ function libelleLieu(l: Lieu): string {
         : '';
 }
 
-function carteLieu(l: Lieu): string {
-  const cat = donnees.categories[l.categorie];
-  const badges = [
+function itineraire(l: Lieu): string {
+  return l.lat
+    ? `https://www.google.com/maps/dir/?api=1&destination=${l.lat},${l.lon}`
+    : `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
+        `${l.nom} ${l.adresse}`
+      )}`;
+}
+
+/** Les badges communs aux deux cartes (liste et bulle). */
+function badges(l: Lieu): string {
+  return [
     l.ageBrut && `<span class="badge">${echappe(l.ageBrut)} ans</span>`,
     l.prix && `<span class="badge ${l.prix}">${echappe(libellePrix(l))}</span>`,
     l.lieu && `<span class="badge">${echappe(libelleLieu(l))}</span>`,
-    l.note !== null && `<span class="badge note">★ ${l.note}</span>`,
   ]
     .filter(Boolean)
     .join('');
+}
 
+/**
+ * Bulle compacte ouverte au clic sur un marqueur : l'essentiel sans masquer
+ * la carte. Le bouton « Détails » ouvre la fiche complète.
+ */
+function miniCarte(l: Lieu): string {
+  const cat = donnees.categories[l.categorie];
+  const alerte = l.alertes.length
+    ? `<p class="mini-alerte ${l.alertes[0].niveau}">${echappe(l.alertes[0].texte)}</p>`
+    : '';
+
+  return `
+    <div class="mini">
+      <p class="mini-cat" style="--c:${cat.couleur}">
+        <span aria-hidden="true">${l.emoji}</span> ${echappe(cat.label)}
+      </p>
+      <h3>${echappe(l.nom)}</h3>
+      <p class="badges">${badges(l)}</p>
+      ${alerte}
+      ${l.adresse ? `<p class="mini-adresse">${echappe(l.adresse)}</p>` : ''}
+      ${l.horaires ? `<p class="mini-adresse">🕒 ${echappe(l.horaires)}</p>` : ''}
+      <p class="mini-actions">
+        <button type="button" class="mini-details" data-id="${l.id}">Détails</button>
+        <a href="${echappe(itineraire(l))}" target="_blank" rel="noopener">Itinéraire</a>
+      </p>
+    </div>`;
+}
+
+function carteLieu(l: Lieu): string {
+  const cat = donnees.categories[l.categorie];
   const alerte = l.alertes.length
     ? `<p class="mini-alerte ${l.alertes[0].niveau}">${echappe(l.alertes[0].texte)}</p>`
     : '';
@@ -233,7 +268,7 @@ function carteLieu(l: Lieu): string {
           <span class="meta">${echappe(cat.label)}${
             l.commune ? ` · ${echappe(l.commune)}` : ''
           } ${sansGps}</span>
-          <span class="badges">${badges}</span>
+          <span class="badges">${badges(l)}</span>
           ${alerte}
         </span>
       </button>
@@ -275,7 +310,16 @@ function rendre(): void {
       title: l.nom,
       alt: l.nom,
     });
-    m.on('click', () => selectionner(l.id, 'carte'));
+    // La bulle s'ouvre seule au clic (comportement Leaflet) ; on se contente
+    // de synchroniser la surbrillance et la liste.
+    m.bindPopup(() => miniCarte(l), {
+      className: 'popup-mini',
+      minWidth: 210,
+      maxWidth: 250,
+      autoPanPadding: [24, 24],
+      offset: [0, -6],
+    });
+    m.on('click', () => surligner(l.id, 'carte'));
     marqueurs.set(l.id, m);
     groupe.addLayer(m);
   }
@@ -355,11 +399,6 @@ function ouvrirFiche(l: Lieu): void {
       ${l.ageBrut ? `<span class="badge">${echappe(l.ageBrut)} ans</span>` : ''}
       ${l.prix ? `<span class="badge ${l.prix}">${echappe(libellePrix(l))}</span>` : ''}
       ${l.lieu ? `<span class="badge">${echappe(libelleLieu(l))}</span>` : ''}
-      ${
-        l.note !== null
-          ? `<span class="badge note">★ ${l.note}${l.nbAvis ? ` (${l.nbAvis} avis)` : ''}</span>`
-          : ''
-      }
     </p>
     ${l.tags.length ? `<p class="tags">${l.tags.map((t) => `<span>${echappe(t)}</span>`).join('')}</p>` : ''}
     ${l.remarque ? `<p class="remarque">${echappe(l.remarque)}</p>` : ''}
@@ -385,33 +424,50 @@ function ouvrirFiche(l: Lieu): void {
   elFiche.focus();
 }
 
-function selectionner(id: string | null, source: 'liste' | 'carte'): void {
+/**
+ * Met un lieu en avant sans ouvrir la fiche complète : marqueur accentué et
+ * ligne correspondante amenée dans la liste. C'est ce que déclenche un clic
+ * sur la carte, où la bulle suffit.
+ */
+function surligner(id: string | null, source: 'liste' | 'carte'): void {
   etat.selection = id;
   majSelection();
 
   if (!id) {
-    elFiche.hidden = true;
     history.replaceState(null, '', location.pathname + location.search);
+    return;
+  }
+
+  history.replaceState(null, '', `#lieu=${id}`);
+
+  if (source === 'carte') {
+    const b = elListe.querySelector<HTMLElement>(`[data-id="${CSS.escape(id)}"]`);
+    b?.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+  }
+}
+
+function fermerFiche(): void {
+  elFiche.hidden = true;
+}
+
+/** Depuis la liste : fiche complète, et la carte suit. */
+function selectionner(id: string | null, source: 'liste' | 'carte'): void {
+  if (!id) {
+    fermerFiche();
+    surligner(null, source);
     return;
   }
 
   const l = donnees.lieux.find((x) => x.id === id);
   if (!l) return;
 
+  surligner(id, source);
   ouvrirFiche(l);
-  history.replaceState(null, '', `#lieu=${id}`);
 
   if (source === 'liste' && l.lat !== null) {
     // Ouvre le cluster si nécessaire, puis centre sur le marqueur.
     const m = marqueurs.get(id);
-    if (m) {
-      groupe.zoomToShowLayer(m, () => carte.panTo([l.lat!, l.lon!]));
-    }
-  }
-
-  if (source === 'carte') {
-    const b = elListe.querySelector<HTMLElement>(`[data-id="${CSS.escape(id)}"]`);
-    b?.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+    if (m) groupe.zoomToShowLayer(m, () => carte.panTo([l.lat!, l.lon!]));
   }
 }
 
@@ -473,6 +529,23 @@ elReinit.addEventListener('click', () => {
 elListe.addEventListener('click', (e) => {
   const b = (e.target as HTMLElement).closest<HTMLElement>('.fiche-carte');
   if (b?.dataset.id) selectionner(b.dataset.id, 'liste');
+});
+
+// « Détails » dans la bulle : on passe à la fiche complète. La bulle est
+// reconstruite à chaque ouverture, d'où l'écoute déléguée sur le conteneur.
+carte.getContainer().addEventListener('click', (e) => {
+  const b = (e.target as HTMLElement).closest<HTMLElement>('.mini-details');
+  if (!b?.dataset.id) return;
+  const l = donnees.lieux.find((x) => x.id === b.dataset.id);
+  if (l) {
+    carte.closePopup();
+    ouvrirFiche(l);
+  }
+});
+
+// Fermer la bulle retire la surbrillance, sauf si la fiche complète est ouverte.
+carte.on('popupclose', () => {
+  if (elFiche.hidden) surligner(null, 'carte');
 });
 
 $('fermer-fiche').addEventListener('click', () => selectionner(null, 'liste'));

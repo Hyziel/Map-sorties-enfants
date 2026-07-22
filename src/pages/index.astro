@@ -163,7 +163,7 @@ const TRANCHES = [
   }
 
   .ge {
-    color: var(--orange);
+    color: var(--accent-fort);
   }
 
   .compte {
@@ -227,8 +227,8 @@ const TRANCHES = [
   }
 
   .champ-recherche:focus-within {
-    border-color: var(--orange);
-    box-shadow: 0 0 0 3px rgb(242 104 60 / 0.18);
+    border-color: var(--accent-fort);
+    box-shadow: 0 0 0 3px rgb(246 169 160 / 0.35);
   }
 
   .select select {
@@ -249,7 +249,7 @@ const TRANCHES = [
     border: 0;
     border-radius: 999px;
     background: var(--surlignage);
-    color: var(--orange-fonce);
+    color: var(--accent-fort);
     font-weight: 700;
     font-size: 0.85rem;
     cursor: pointer;
@@ -283,10 +283,11 @@ const TRANCHES = [
     border-color: var(--puce);
   }
 
+  /* Encre foncée et non blanche : les pastels ne portent pas le blanc. */
   .puce[aria-pressed='true'] {
     background: var(--puce);
-    border-color: var(--puce);
-    color: #fff;
+    border-color: color-mix(in srgb, var(--puce) 70%, #6b5b52);
+    color: #33291f;
   }
 
   /* --- Bascule liste/carte (mobile) --- */
