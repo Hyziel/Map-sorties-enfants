@@ -1,0 +1,331 @@
+// Transforme data/activités.xlsx en src/data/lieux.json (consommé par le site).
+// Le classeur reste la source de vérité : on ne modifie jamais le .xlsx ici.
+//
+//   node scripts/build-data.mjs
+//
+// Étapes : lecture des 3 feuilles de lieux -> normalisation (catégories, âges,
+// prix) -> ajout des coordonnées du cache de géocodage -> déduplication ->
+// rattachement des alertes de fraîcheur documentées dans la feuille "Méthode".
+
+import { readFileSync, writeFileSync, existsSync, mkdirSync } from 'node:fs';
+import { readSheets } from './xlsx.mjs';
+
+const XLSX = new URL('../data/activités.xlsx', import.meta.url);
+const CACHE = new URL('../data/geocache.json', import.meta.url);
+const OUT_DIR = new URL('../src/data/', import.meta.url);
+const OUT = new URL('lieux.json', OUT_DIR);
+
+// Genève et sa couronne. Tout point hors de cette boîte vient d'un géocodage
+// parti dans le décor (homonyme en France ou ailleurs en Suisse) : on l'écarte.
+const BBOX = { latMin: 46.05, latMax: 46.4, lonMin: 5.85, lonMax: 6.35 };
+
+/* ------------------------------------------------------------------ */
+/* Catégories                                                          */
+/* ------------------------------------------------------------------ */
+
+// Chaque catégorie canonique : libellé affiché, emoji, couleur du marqueur.
+const CATEGORIES = {
+  parcs: { label: 'Parcs & aires de jeux', emoji: '🌳', couleur: '#3f9142' },
+  eau: { label: "Pataugeoires & jeux d'eau", emoji: '💦', couleur: '#1f9bd1' },
+  sport: { label: 'Sport & piscines', emoji: '🏊', couleur: '#0f7a8f' },
+  couvert: { label: 'Jeux couverts', emoji: '🎪', couleur: '#d4562b' },
+  biblio: { label: 'Bibliothèques & ludothèques', emoji: '📚', couleur: '#8a5cb8' },
+  musees: { label: 'Musées & culture', emoji: '🏛️', couleur: '#a8842c' },
+  spectacles: { label: 'Théâtres & spectacles', emoji: '🎭', couleur: '#c23f7a' },
+  animaux: { label: 'Animaux', emoji: '🐐', couleur: '#7a6a3a' },
+  nature: { label: 'Balades & nature', emoji: '🥾', couleur: '#5b8c3e' },
+  ateliers: { label: 'Activités & ateliers', emoji: '🎨', couleur: '#e0761b' },
+  cinema: { label: 'Cinémas', emoji: '🎬', couleur: '#5a5f9e' },
+  grillades: { label: 'Grillades & pique-nique', emoji: '🔥', couleur: '#b5451f' },
+  cafes: { label: 'Cafés & restaurants', emoji: '☕', couleur: '#9c6644' },
+  parents: { label: 'Accueil parents-enfants', emoji: '🤱', couleur: '#d15f8f' },
+  sante: { label: 'Santé', emoji: '🏥', couleur: '#c0392b' },
+  bebe: { label: 'Espace bébé & allaitement', emoji: '🍼', couleur: '#d98cae' },
+};
+
+// Les trois feuilles n'utilisent pas le même vocabulaire ni la même casse.
+// Clé = libellé source en minuscules.
+const MAP_CATEGORIE = {
+  'parcs & aires de jeux': 'parcs',
+  "pataugeoires & jeux d'eau": 'eau',
+  'activités sportives & aquatiques': 'sport',
+  'sport & aquatique': 'sport',
+  escalade: 'sport',
+  'pumptrack & skate': 'sport',
+  'aire de jeux couverte': 'couvert',
+  'trampolines & parkour': 'couvert',
+  'parc de loisirs': 'couvert',
+  'bibliothèques & ludothèques': 'biblio',
+  librairie: 'biblio',
+  'musées & culture': 'musees',
+  'théâtres & spectacles': 'spectacles',
+  'concerts jeune public': 'spectacles',
+  animaux: 'animaux',
+  'balades & nature': 'nature',
+  activités: 'ateliers',
+  'cours de cuisine & ateliers': 'ateliers',
+  'cours de langue': 'ateliers',
+  cinémas: 'cinema',
+  'grillades & pique-nique': 'grillades',
+  'cafés & restaurants bébé-friendly': 'cafes',
+  'accueil parents-enfants': 'parents',
+  santé: 'sante',
+  'espace bébé & allaitement': 'bebe',
+};
+
+function categorie(brut, nom) {
+  const key = MAP_CATEGORIE[(brut || '').toLowerCase().trim()];
+  if (key) return key;
+  // Deux lignes de la feuille Services sont sans catégorie (crèches).
+  if (/crèche|vie enfantine/i.test(nom)) return 'parents';
+  return 'ateliers';
+}
+
+/* ------------------------------------------------------------------ */
+/* Champs                                                              */
+/* ------------------------------------------------------------------ */
+
+// "0-12+" -> { min: 0, max: 12, ouvert: true } ; "Adultes" -> null
+function parseAge(brut) {
+  const s = (brut || '').trim();
+  if (!s || /adulte/i.test(s)) return null;
+  const m = /^(\d+(?:\.\d+)?)\s*-\s*(\d+(?:\.\d+)?)(\+)?$/.exec(s);
+  if (m) {
+    return { min: Math.floor(Number(m[1])), max: Number(m[2]), ouvert: Boolean(m[3]) };
+  }
+  const seul = /^(\d+)(\+)?$/.exec(s);
+  if (seul) return { min: Number(seul[1]), max: Number(seul[1]), ouvert: Boolean(seul[2]) };
+  return null;
+}
+
+const PRIX = { gratuit: 'gratuit', payant: 'payant', mixte: 'mixte' };
+const LIEU = {
+  intérieur: 'interieur',
+  extérieur: 'exterieur',
+  'int./ext.': 'les_deux',
+};
+
+function nombre(v) {
+  const s = String(v ?? '').trim().replace(',', '.');
+  if (!s) return null; // Number('') vaut 0 : à écarter avant la conversion
+  const n = Number(s);
+  return Number.isFinite(n) ? n : null;
+}
+
+function tags(r) {
+  return (r['Tags affichés'] || '')
+    .split('/')
+    .map((t) => t.trim())
+    .filter(Boolean);
+}
+
+const sansAccents = (s) =>
+  (s || '')
+    .normalize('NFD')
+    .replace(/[̀-ͯ]/g, '')
+    .toLowerCase();
+
+// Clé de rapprochement pour la déduplication : nom sans accents, ponctuation
+// ni articles, afin que "À L'Eau" et "A l'eau" se rejoignent.
+function cle(nom) {
+  return sansAccents(nom)
+    .replace(/\bmuseum\b/g, 'musee') // « Musée » / « Muséum » d'histoire naturelle
+    .replace(/[^a-z0-9]+/g, ' ')
+    .replace(/\b(le|la|les|de|des|du|l|d|the)\b/g, '')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+/* ------------------------------------------------------------------ */
+/* Alertes de fraîcheur (feuille « Méthode & lacunes », 22.07.2026)     */
+/* ------------------------------------------------------------------ */
+
+const ALERTES = [
+  {
+    // cle() supprime les articles isolés : on teste le nom, pas la clé.
+    test: (l) => /mus(ee|eum).*histoire naturelle/.test(sansAccents(l.nom)),
+    niveau: 'ferme',
+    texte:
+      'Fermé depuis janvier 2024 (infestation de vrillettes). Réouverture progressive annoncée dès 2028.',
+  },
+  {
+    test: (l) => l.categorie === 'parents',
+    niveau: 'attention',
+    texte:
+      'La plupart des espaces parents-enfants et haltes-jeux ferment pendant les vacances scolaires. À vérifier avant de se déplacer.',
+  },
+  {
+    test: (l) => l.categorie === 'grillades',
+    niveau: 'saisonnier',
+    texte: 'Emplacement saisonnier : ouvert de fin mai à septembre.',
+  },
+  {
+    test: (l) => l.categorie === 'eau',
+    niveau: 'saisonnier',
+    texte: "Pataugeoires et jeux d'eau sont saisonniers (ouverture estivale).",
+  },
+];
+
+/* ------------------------------------------------------------------ */
+/* Construction                                                        */
+/* ------------------------------------------------------------------ */
+
+const sheets = readSheets(XLSX);
+const cache = existsSync(CACHE) ? JSON.parse(readFileSync(CACHE, 'utf8')) : {};
+
+const SOURCES = [
+  { feuille: 'Sorties', type: 'sortie', origine: 'genevafamily' },
+  { feuille: 'Nouveaux lieux trouvés', type: 'sortie', origine: 'complement' },
+  { feuille: 'Services (hors sorties)', type: 'service', origine: 'genevafamily' },
+];
+
+const lieux = [];
+const stats = { total: 0, geocodes: 0, sansGps: 0, doublons: 0, horsZone: 0 };
+
+for (const { feuille, type, origine } of SOURCES) {
+  for (const r of sheets[feuille] ?? []) {
+    const nom = (r['Nom'] || '').trim();
+    if (!nom) continue;
+    stats.total++;
+
+    const adresse = (r['Adresse vérifiée (Google)'] || r['Adresse'] || '').trim();
+    let lat = nombre(r['Latitude']);
+    let lon = nombre(r['Longitude']);
+    let precision = lat && lon ? 'exacte' : null;
+
+    // Complète depuis le cache de géocodage quand la feuille n'a pas de GPS.
+    if ((lat === null || lon === null) && cache[adresse]) {
+      lat = cache[adresse].lat;
+      lon = cache[adresse].lon;
+      precision = cache[adresse].precision === 'rue' ? 'approchee' : 'geocodee';
+    }
+
+    if (lat !== null && lon !== null) {
+      const dedans =
+        lat >= BBOX.latMin && lat <= BBOX.latMax && lon >= BBOX.lonMin && lon <= BBOX.lonMax;
+      if (!dedans) {
+        stats.horsZone++;
+        lat = lon = precision = null;
+      }
+    }
+
+    if (lat === null) stats.sansGps++;
+    else if (precision !== 'exacte') stats.geocodes++;
+
+    const cat = categorie(r['Catégorie'] || r['Catégorie suggérée'], nom);
+    const commune =
+      (r['Commune'] || '').trim() ||
+      /,\s*\d{4}\s+([^,]+)$/.exec(adresse)?.[1]?.trim() ||
+      '';
+
+    lieux.push({
+      id: '',
+      nom,
+      type,
+      origine,
+      categorie: cat,
+      emoji: (r['Emoji'] || '').trim() || CATEGORIES[cat].emoji,
+      age: parseAge(r['Âge']),
+      ageBrut: (r['Âge'] || '').trim(),
+      prix: PRIX[(r['Prix'] || '').toLowerCase().trim()] ?? null,
+      tarifPrecis: (r['Tarif précis'] || '').trim(),
+      lieu: LIEU[(r['Intérieur/Extérieur'] || '').toLowerCase().trim()] ?? null,
+      adresse,
+      codePostal: (r['Code postal'] || '').trim(),
+      commune,
+      lat,
+      lon,
+      precision,
+      tags: tags(r),
+      telephone: (r['Téléphone'] || '').trim(),
+      horaires: (r['Horaires'] || '').trim() === 'Non publiés' ? '' : (r['Horaires'] || '').trim(),
+      note: nombre(r['Note Google']),
+      nbAvis: nombre(r['Nb avis']),
+      site: (r['Site web'] || '').trim(),
+      accessibilite: (r['Accessibilité poussette/PMR'] || '').trim(),
+      remarque: (r['Remarque'] || '').trim(),
+      alertes: [],
+    });
+  }
+}
+
+// Déduplication : la feuille « Méthode » signale plusieurs doublons entre
+// sources. On fusionne sur le nom normalisé en gardant la fiche la plus
+// complète et en récupérant les champs manquants de l'autre.
+const parCle = new Map();
+const complet = (l) =>
+  (l.lat !== null ? 4 : 0) + (l.horaires ? 2 : 0) + (l.telephone ? 1 : 0) + (l.note ? 1 : 0);
+
+for (const l of lieux) {
+  const k = `${l.type}:${cle(l.nom)}`;
+  const deja = parCle.get(k);
+  if (!deja) {
+    parCle.set(k, l);
+    continue;
+  }
+  stats.doublons++;
+  const [garde, autre] = complet(l) > complet(deja) ? [l, deja] : [deja, l];
+  for (const champ of [
+    'telephone', 'horaires', 'site', 'tarifPrecis', 'accessibilite', 'remarque', 'adresse',
+  ]) {
+    if (!garde[champ] && autre[champ]) garde[champ] = autre[champ];
+  }
+  if (garde.lat === null && autre.lat !== null) {
+    garde.lat = autre.lat;
+    garde.lon = autre.lon;
+    garde.precision = autre.precision;
+  }
+  if (!garde.tags.length) garde.tags = autre.tags;
+  if (garde.note === null) {
+    garde.note = autre.note;
+    garde.nbAvis = autre.nbAvis;
+  }
+  parCle.set(k, garde);
+}
+
+const finaux = [...parCle.values()];
+
+// Identifiants stables (utilisés dans l'URL : #lieu=parc-la-grange).
+const vus = new Set();
+for (const l of finaux) {
+  let base = cle(l.nom).replace(/\s+/g, '-') || 'lieu';
+  let id = base;
+  let n = 2;
+  while (vus.has(id)) id = `${base}-${n++}`;
+  vus.add(id);
+  l.id = id;
+
+  for (const a of ALERTES) {
+    if (a.test(l)) l.alertes.push({ niveau: a.niveau, texte: a.texte });
+  }
+}
+
+finaux.sort((a, b) => a.nom.localeCompare(b.nom, 'fr'));
+
+const communes = [...new Set(finaux.map((l) => l.commune).filter(Boolean))].sort((a, b) =>
+  a.localeCompare(b, 'fr')
+);
+
+const payload = {
+  genereLe: new Date().toISOString().slice(0, 10),
+  verifieLe: '2026-07-22', // date de la vérification manuelle (feuille Méthode)
+  categories: CATEGORIES,
+  communes,
+  stats: {
+    lieux: finaux.length,
+    sorties: finaux.filter((l) => l.type === 'sortie').length,
+    services: finaux.filter((l) => l.type === 'service').length,
+    cartographies: finaux.filter((l) => l.lat !== null).length,
+    sansGps: finaux.filter((l) => l.lat === null).length,
+  },
+  lieux: finaux,
+};
+
+if (!existsSync(OUT_DIR)) mkdirSync(OUT_DIR, { recursive: true });
+writeFileSync(OUT, JSON.stringify(payload) + '\n');
+
+console.log(
+  `${payload.stats.lieux} lieux écrits (${payload.stats.sorties} sorties, ${payload.stats.services} services)\n` +
+    `  cartographiés : ${payload.stats.cartographies} — sans GPS : ${payload.stats.sansGps}\n` +
+    `  doublons fusionnés : ${stats.doublons} — points hors zone écartés : ${stats.horsZone}`
+);

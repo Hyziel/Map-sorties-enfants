@@ -1,0 +1,488 @@
+---
+import Base from '../layouts/Base.astro';
+import donnees from '../data/lieux.json';
+import 'leaflet/dist/leaflet.css';
+import 'leaflet.markercluster/dist/MarkerCluster.css';
+import 'leaflet.markercluster/dist/MarkerCluster.Default.css';
+
+const { stats, categories, communes } = donnees;
+
+const TRANCHES = [
+  { id: '0', label: '0-1 an', age: 0 },
+  { id: '2', label: '2-3 ans', age: 2 },
+  { id: '4', label: '4-5 ans', age: 4 },
+  { id: '6', label: '6-9 ans', age: 6 },
+  { id: '10', label: '10 ans et +', age: 10 },
+];
+---
+
+<Base
+  titre="Sorties enfants à Genève — la carte des idées"
+  description={`Carte de ${stats.sorties} sorties et activités pour enfants à Genève et dans le canton : parcs, pataugeoires, musées, ludothèques, ateliers. Filtres par âge, prix et météo.`}
+>
+  <header class="entete">
+    <h1><span aria-hidden="true">🎠</span> Sorties enfants <span class="ge">Genève</span></h1>
+    <p class="compte">
+      {stats.sorties} sorties · {stats.services} services
+    </p>
+    <a class="lien-apropos" href="/a-propos/">D'où viennent ces données&nbsp;?</a>
+  </header>
+
+  <form class="filtres" id="filtres" role="search" aria-label="Filtrer les sorties">
+    <div class="ligne-1">
+      <div class="champ-recherche">
+        <span aria-hidden="true">🔎</span>
+        <input
+          type="search"
+          id="q"
+          name="q"
+          placeholder="Un lieu, un quartier, une envie…"
+          aria-label="Rechercher un lieu"
+          autocomplete="off"
+        />
+      </div>
+
+      <div class="selects">
+      <label class="select">
+        <span class="sr-only">Âge de l'enfant</span>
+        <select id="age" aria-label="Âge de l'enfant">
+          <option value="">Tous les âges</option>
+          {TRANCHES.map((t) => <option value={t.age}>{t.label}</option>)}
+        </select>
+      </label>
+
+      <label class="select">
+        <span class="sr-only">Tarif</span>
+        <select id="prix" aria-label="Tarif">
+          <option value="">Gratuit ou payant</option>
+          <option value="gratuit">Gratuit</option>
+          <option value="payant">Payant</option>
+        </select>
+      </label>
+
+      <label class="select">
+        <span class="sr-only">Intérieur ou extérieur</span>
+        <select id="lieu" aria-label="Intérieur ou extérieur">
+          <option value="">Par tous les temps</option>
+          <option value="interieur">À l'intérieur (il pleut)</option>
+          <option value="exterieur">Dehors (il fait beau)</option>
+        </select>
+      </label>
+
+      <label class="select">
+        <span class="sr-only">Commune</span>
+        <select id="commune" aria-label="Commune">
+          <option value="">Tout le canton</option>
+          {communes.map((c) => <option value={c}>{c}</option>)}
+        </select>
+      </label>
+
+      <button type="button" id="reinit" class="reinit" hidden>Effacer</button>
+      </div>
+    </div>
+
+    <div class="ligne-2" role="group" aria-label="Catégories">
+      {
+        Object.entries(categories).map(([id, c]) => (
+          <button
+            type="button"
+            class="puce"
+            data-cat={id}
+            aria-pressed="false"
+            style={`--puce: ${c.couleur}`}
+          >
+            <span aria-hidden="true">{c.emoji}</span> {c.label}
+          </button>
+        ))
+      }
+    </div>
+  </form>
+
+  <div class="bascule" role="tablist" aria-label="Affichage">
+    <button type="button" role="tab" id="onglet-liste" aria-selected="true" data-vue="liste">
+      Liste
+    </button>
+    <button type="button" role="tab" id="onglet-carte" aria-selected="false" data-vue="carte">
+      Carte
+    </button>
+  </div>
+
+  <main class="grille" data-vue="liste">
+    <section class="colonne-liste" aria-label="Résultats">
+      <p class="resume" id="resume" role="status" aria-live="polite"></p>
+      <ul class="liste" id="liste"></ul>
+      <p class="vide" id="vide" hidden>
+        Aucune sortie ne correspond. Essayez d'élargir l'âge ou d'effacer les filtres.
+      </p>
+    </section>
+
+    <section class="colonne-carte" aria-label="Carte">
+      <div id="carte"></div>
+      <p class="note-carte" id="note-carte"></p>
+    </section>
+  </main>
+
+  <aside class="fiche" id="fiche" hidden aria-labelledby="fiche-titre" tabindex="-1">
+    <button type="button" class="fermer" id="fermer-fiche" aria-label="Fermer la fiche">✕</button>
+    <div id="fiche-contenu"></div>
+  </aside>
+
+  <script type="application/json" id="donnees" set:html={JSON.stringify(donnees)} />
+  <script>
+    import '../scripts/carte';
+  </script>
+</Base>
+
+<style>
+  /* La page occupe exactement la hauteur de la fenêtre : entête et filtres
+     gardent leur taille naturelle, la grille prend le reste. Évite de coder
+     en dur la hauteur des barres, qui varie avec le retour à la ligne. */
+  :global(body) {
+    display: flex;
+    flex-direction: column;
+    height: 100dvh;
+    overflow: hidden;
+  }
+
+  .entete {
+    flex: 0 0 auto;
+    display: flex;
+    align-items: baseline;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+    padding: 0.7rem clamp(0.75rem, 3vw, 1.5rem);
+    background: var(--carte);
+    border-bottom: 1px solid var(--bord);
+  }
+
+  h1 {
+    margin: 0;
+    font-size: clamp(1.05rem, 3.4vw, 1.35rem);
+    font-weight: 800;
+    letter-spacing: -0.015em;
+  }
+
+  .ge {
+    color: var(--orange);
+  }
+
+  .compte {
+    margin: 0;
+    font-size: 0.85rem;
+    color: var(--encre-doux);
+  }
+
+  .lien-apropos {
+    margin-left: auto;
+    font-size: 0.82rem;
+    color: var(--encre-doux);
+  }
+
+  /* --- Filtres --- */
+
+  .filtres {
+    flex: 0 0 auto;
+    z-index: 500;
+    background: var(--carte);
+    border-bottom: 1px solid var(--bord);
+    padding: 0.6rem clamp(0.75rem, 3vw, 1.5rem);
+    display: grid;
+    gap: 0.5rem;
+  }
+
+  .ligne-1 {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+
+  .selects {
+    display: contents; /* sur grand écran les filtres restent sur une seule ligne */
+  }
+
+  .champ-recherche {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    flex: 1 1 15rem;
+    min-width: 0;
+    padding: 0 0.65rem;
+    background: var(--fond);
+    border: 1px solid var(--bord-fort);
+    border-radius: 999px;
+  }
+
+  .champ-recherche input {
+    flex: 1;
+    min-width: 0;
+    border: 0;
+    background: none;
+    padding: 0.5rem 0;
+    font-size: 0.95rem;
+  }
+
+  .champ-recherche input:focus {
+    outline: none;
+  }
+
+  .champ-recherche:focus-within {
+    border-color: var(--orange);
+    box-shadow: 0 0 0 3px rgb(242 104 60 / 0.18);
+  }
+
+  .select select {
+    appearance: none;
+    padding: 0.5rem 1.9rem 0.5rem 0.75rem;
+    border: 1px solid var(--bord-fort);
+    border-radius: 999px;
+    background: var(--fond)
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 8'%3E%3Cpath fill='%236a6259' d='M1 1.5 6 6.5l5-5'/%3E%3C/svg%3E")
+      no-repeat right 0.7rem center/0.65rem;
+    font-size: 0.88rem;
+    cursor: pointer;
+    max-width: 12rem;
+  }
+
+  .reinit {
+    padding: 0.5rem 0.9rem;
+    border: 0;
+    border-radius: 999px;
+    background: var(--surlignage);
+    color: var(--orange-fonce);
+    font-weight: 700;
+    font-size: 0.85rem;
+    cursor: pointer;
+  }
+
+  .ligne-2 {
+    display: flex;
+    gap: 0.4rem;
+    overflow-x: auto;
+    padding-bottom: 0.15rem;
+    scrollbar-width: thin;
+  }
+
+  .puce {
+    flex: 0 0 auto;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    padding: 0.34rem 0.7rem;
+    border: 1px solid var(--bord-fort);
+    border-radius: 999px;
+    background: var(--carte);
+    font-size: 0.82rem;
+    font-weight: 600;
+    white-space: nowrap;
+    cursor: pointer;
+    transition: background 0.12s, border-color 0.12s;
+  }
+
+  .puce:hover {
+    border-color: var(--puce);
+  }
+
+  .puce[aria-pressed='true'] {
+    background: var(--puce);
+    border-color: var(--puce);
+    color: #fff;
+  }
+
+  /* --- Bascule liste/carte (mobile) --- */
+
+  .bascule {
+    display: none;
+    gap: 0.25rem;
+    padding: 0.5rem clamp(0.75rem, 3vw, 1.5rem) 0;
+  }
+
+  .bascule button {
+    flex: 1;
+    padding: 0.5rem;
+    border: 1px solid var(--bord-fort);
+    background: var(--carte);
+    font-weight: 700;
+    font-size: 0.88rem;
+    cursor: pointer;
+  }
+
+  .bascule button:first-child {
+    border-radius: 999px 0 0 999px;
+  }
+
+  .bascule button:last-child {
+    border-radius: 0 999px 999px 0;
+  }
+
+  .bascule button[aria-selected='true'] {
+    background: var(--encre);
+    border-color: var(--encre);
+    color: var(--fond);
+  }
+
+  /* --- Grille principale --- */
+
+  .grille {
+    flex: 1 1 auto;
+    min-height: 0; /* sans quoi les colonnes débordent au lieu de défiler */
+    display: grid;
+    grid-template-columns: minmax(20rem, 27rem) 1fr;
+  }
+
+  .colonne-liste {
+    overflow-y: auto;
+    border-right: 1px solid var(--bord);
+    padding: 0.5rem clamp(0.5rem, 2vw, 0.9rem) 2rem;
+    overscroll-behavior: contain;
+  }
+
+  .resume {
+    margin: 0.35rem 0.35rem 0.6rem;
+    font-size: 0.82rem;
+    color: var(--encre-doux);
+  }
+
+  .liste {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 0.5rem;
+  }
+
+  .vide {
+    padding: 2rem 1rem;
+    text-align: center;
+    color: var(--encre-doux);
+  }
+
+  .colonne-carte {
+    position: relative;
+  }
+
+  #carte {
+    height: 100%;
+    width: 100%;
+    background: var(--fond);
+  }
+
+  .note-carte {
+    position: absolute;
+    left: 0.6rem;
+    bottom: 0.6rem;
+    z-index: 450;
+    margin: 0;
+    max-width: min(24rem, calc(100% - 1.2rem));
+    padding: 0.4rem 0.7rem;
+    border-radius: var(--rayon-s);
+    background: var(--carte);
+    border: 1px solid var(--bord);
+    box-shadow: var(--ombre);
+    font-size: 0.75rem;
+    color: var(--encre-doux);
+  }
+
+  .note-carte:empty {
+    display: none;
+  }
+
+  /* --- Fiche détail --- */
+
+  .fiche {
+    position: fixed;
+    top: 0;
+    right: 0;
+    z-index: 900;
+    width: min(26rem, 100vw);
+    height: 100dvh;
+    overflow-y: auto;
+    background: var(--carte);
+    border-left: 1px solid var(--bord);
+    box-shadow: var(--ombre-forte);
+    padding: 1.25rem;
+    animation: glisse 0.18s ease-out;
+  }
+
+  @keyframes glisse {
+    from {
+      transform: translateX(1.5rem);
+      opacity: 0;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .fiche {
+      animation: none;
+    }
+  }
+
+  .fermer {
+    position: absolute;
+    top: 0.7rem;
+    right: 0.7rem;
+    width: 2rem;
+    height: 2rem;
+    border: 0;
+    border-radius: 50%;
+    background: var(--fond);
+    font-size: 0.9rem;
+    cursor: pointer;
+  }
+
+  @media (max-width: 860px) {
+    .bascule {
+      display: flex;
+      flex: 0 0 auto;
+    }
+
+    .grille {
+      grid-template-columns: 1fr;
+    }
+
+    /* Les filtres tiennent sur deux rangées défilables plutôt que d'empiler
+       quatre lignes et de dévorer la hauteur disponible pour la carte. */
+    .ligne-1 {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 0.4rem;
+    }
+
+    .selects {
+      display: flex;
+      gap: 0.4rem;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+
+    .selects::-webkit-scrollbar {
+      display: none;
+    }
+
+    .select select {
+      max-width: none;
+    }
+
+    .entete .compte {
+      display: none;
+    }
+
+    .colonne-liste {
+      border-right: 0;
+    }
+
+    .grille[data-vue='liste'] .colonne-carte,
+    .grille[data-vue='carte'] .colonne-liste {
+      display: none;
+    }
+
+    .fiche {
+      width: 100vw;
+      top: auto;
+      bottom: 0;
+      height: 85dvh;
+      border-radius: var(--rayon) var(--rayon) 0 0;
+      border-left: 0;
+    }
+  }
+</style>

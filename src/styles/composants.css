@@ -1,0 +1,302 @@
+/* Styles des éléments construits en JavaScript (fiches de la liste, fiche
+   détaillée, marqueurs). Ils ne peuvent pas vivre dans un <style> scopé Astro,
+   qui ne s'applique qu'au balisage rendu au build. */
+
+/* --- Fiche de la liste --- */
+
+.fiche-carte {
+  display: flex;
+  gap: 0.65rem;
+  width: 100%;
+  text-align: left;
+  padding: 0.6rem;
+  border: 1px solid var(--bord);
+  border-radius: var(--rayon);
+  background: var(--carte);
+  cursor: pointer;
+  transition: border-color 0.12s, box-shadow 0.12s, background 0.12s;
+}
+
+.fiche-carte:hover {
+  border-color: var(--bord-fort);
+  box-shadow: var(--ombre);
+}
+
+.fiche-carte[aria-pressed='true'] {
+  border-color: var(--orange);
+  background: var(--surlignage);
+  box-shadow: 0 0 0 1px var(--orange);
+}
+
+.fiche-carte .pastille {
+  flex: 0 0 auto;
+  display: grid;
+  place-items: center;
+  width: 2.35rem;
+  height: 2.35rem;
+  border-radius: 50%;
+  font-size: 1.15rem;
+  background: color-mix(in srgb, var(--c) 16%, transparent);
+  border: 1px solid color-mix(in srgb, var(--c) 40%, transparent);
+}
+
+.fiche-carte .corps {
+  display: grid;
+  gap: 0.22rem;
+  min-width: 0;
+}
+
+.fiche-carte .nom {
+  font-weight: 800;
+  font-size: 0.95rem;
+  line-height: 1.25;
+}
+
+.fiche-carte .meta {
+  font-size: 0.78rem;
+  color: var(--encre-doux);
+}
+
+.sans-gps {
+  display: inline-block;
+  margin-left: 0.15rem;
+  padding: 0 0.35rem;
+  border-radius: 4px;
+  background: var(--bord);
+  color: var(--encre-doux);
+  font-size: 0.7rem;
+}
+
+/* --- Badges --- */
+
+.badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+  margin: 0.15rem 0 0;
+}
+
+.badge {
+  padding: 0.1rem 0.45rem;
+  border-radius: 999px;
+  border: 1px solid var(--bord-fort);
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--encre-doux);
+  white-space: nowrap;
+}
+
+.badge.gratuit {
+  border-color: #7fb98a;
+  color: #2f7a44;
+  background: #eff8f1;
+}
+
+.badge.payant,
+.badge.mixte {
+  border-color: var(--bord-fort);
+}
+
+.badge.note {
+  border-color: #e3c25f;
+  color: #8a6a12;
+  background: #fdf7e4;
+}
+
+@media (prefers-color-scheme: dark) {
+  .badge.gratuit {
+    color: #8fd6a1;
+    background: #1c3324;
+    border-color: #35603f;
+  }
+
+  .badge.note {
+    color: #e8cf87;
+    background: #332c17;
+    border-color: #5f5227;
+  }
+}
+
+/* --- Alertes --- */
+
+.mini-alerte {
+  margin: 0.3rem 0 0;
+  padding: 0.25rem 0.45rem;
+  border-radius: 6px;
+  font-size: 0.73rem;
+  line-height: 1.35;
+  background: var(--info-fond);
+  color: var(--info-texte);
+}
+
+.mini-alerte.ferme {
+  background: var(--alerte-fond);
+  color: var(--alerte-texte);
+  font-weight: 700;
+}
+
+.alerte {
+  margin: 0.5rem 0;
+  padding: 0.55rem 0.7rem;
+  border-radius: var(--rayon-s);
+  border: 1px solid var(--info-bord);
+  background: var(--info-fond);
+  color: var(--info-texte);
+  font-size: 0.85rem;
+  line-height: 1.45;
+}
+
+.alerte.ferme {
+  border-color: var(--alerte-bord);
+  background: var(--alerte-fond);
+  color: var(--alerte-texte);
+}
+
+.alerte strong {
+  display: block;
+}
+
+/* --- Fiche détaillée --- */
+
+.fiche-cat {
+  margin: 0 0 0.2rem;
+  font-size: 0.8rem;
+  font-weight: 800;
+  color: var(--c);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+#fiche h2 {
+  margin: 0 0 0.5rem;
+  font-size: 1.3rem;
+  line-height: 1.2;
+  padding-right: 2rem;
+}
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+  margin: 0.6rem 0;
+}
+
+.tags span {
+  padding: 0.15rem 0.5rem;
+  border-radius: 999px;
+  background: var(--fond);
+  border: 1px solid var(--bord);
+  font-size: 0.76rem;
+}
+
+.remarque {
+  margin: 0.6rem 0;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: var(--encre-doux);
+}
+
+.infos {
+  margin: 0.9rem 0;
+  display: grid;
+  gap: 0.4rem;
+}
+
+.ligne {
+  display: flex;
+  gap: 0.5rem;
+  margin: 0;
+  font-size: 0.88rem;
+  line-height: 1.45;
+  word-break: break-word;
+}
+
+.bouton {
+  display: inline-block;
+  padding: 0.55rem 1.1rem;
+  border-radius: 999px;
+  background: var(--orange);
+  color: #fff;
+  font-weight: 800;
+  font-size: 0.9rem;
+  text-decoration: none;
+}
+
+.bouton:hover {
+  background: var(--orange-fonce);
+}
+
+.precision {
+  margin-top: 1rem;
+  padding-top: 0.7rem;
+  border-top: 1px solid var(--bord);
+  font-size: 0.76rem;
+  color: var(--encre-doux);
+}
+
+/* --- Marqueurs Leaflet --- */
+
+.marqueur-conteneur {
+  background: none;
+  border: 0;
+}
+
+.marqueur {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  font-size: 1rem;
+  border-radius: 50% 50% 50% 4px;
+  transform: rotate(-45deg);
+  background: color-mix(in srgb, var(--c) 22%, #fff);
+  border: 2px solid var(--c);
+  box-shadow: 0 2px 5px rgb(0 0 0 / 0.25);
+}
+
+/* Le marqueur est incliné pour former une goutte : l'emoji est remis d'aplomb. */
+.marqueur i {
+  display: block;
+  transform: rotate(45deg);
+  font-style: normal;
+  line-height: 1;
+}
+
+.marqueur.actif {
+  background: var(--c);
+  transform: rotate(-45deg) scale(1.2);
+  z-index: 1000;
+}
+
+.marqueur.approche {
+  border-style: dashed;
+}
+
+.leaflet-marker-icon .marqueur {
+  transition: transform 0.12s;
+}
+
+/* Les pastilles de regroupement reprennent l'orange du site plutôt que le
+   vert/jaune par défaut de markercluster. La feuille de markercluster est
+   chargée après celle-ci : on passe devant par la spécificité. */
+.leaflet-container .marker-cluster,
+.leaflet-container .marker-cluster-small,
+.leaflet-container .marker-cluster-medium,
+.leaflet-container .marker-cluster-large {
+  background: rgb(242 104 60 / 0.3);
+}
+
+.leaflet-container .marker-cluster div,
+.leaflet-container .marker-cluster-small div,
+.leaflet-container .marker-cluster-medium div,
+.leaflet-container .marker-cluster-large div {
+  background: var(--orange);
+  color: #fff;
+  font-family: 'Nunito Variable', ui-sans-serif, sans-serif;
+  font-weight: 800;
+}
+
+.leaflet-container {
+  font-family: 'Nunito Variable', sans-serif;
+  background: var(--fond);
+}

@@ -1,0 +1,229 @@
+---
+import Base from '../layouts/Base.astro';
+import donnees from '../data/lieux.json';
+
+const { stats, genereLe, verifieLe } = donnees;
+
+// Limites connues, reprises de la feuille « Méthode & lacunes » du classeur.
+const lacunes = [
+  {
+    champ: 'Site web',
+    etat: 'manquant',
+    detail: "Non fourni par Google Places. À compléter site officiel par site officiel.",
+  },
+  {
+    champ: 'Tarif précis',
+    etat: 'manquant',
+    detail: "Seule la mention gratuit / payant est connue pour la plupart des lieux.",
+  },
+  {
+    champ: 'Accessibilité poussette et PMR',
+    etat: 'manquant',
+    detail: "Aucune base structurée n'existe pour le canton.",
+  },
+  {
+    champ: 'Transports TPG',
+    etat: 'manquant',
+    detail: 'Calculable depuis les coordonnées et les données ouvertes TPG, pas encore fait.',
+  },
+];
+
+const alertes = [
+  {
+    titre: "Muséum d'histoire naturelle",
+    texte:
+      "Fermé depuis janvier 2024 pour une infestation de vrillettes. Réouverture progressive annoncée dès 2028, complète en 2036. Il reste listé comme ouvert sur plusieurs sites d'agenda.",
+  },
+  {
+    titre: 'Espaces parents-enfants et haltes-jeux',
+    texte:
+      'La plupart ferment pendant les vacances scolaires. Vérifiez la période avant de vous déplacer.',
+  },
+  {
+    titre: 'Pataugeoires et jeux d\'eau',
+    texte:
+      "Saisonniers, ouverts l'été. Les 18 entrées de la carte n'ont pas été vérifiées une à une.",
+  },
+  {
+    titre: 'Espaces de grillades de la Ville de Genève',
+    texte: 'Ouverts de fin mai à septembre uniquement.',
+  },
+  {
+    titre: 'Horaires',
+    texte:
+      "Ceux qui viennent de Google Places sont maintenus par les établissements eux-mêmes et dérivent souvent. Ils n'ont pas été revérifiés par téléphone.",
+  },
+];
+---
+
+<Base
+  titre="D'où viennent ces données — Sorties enfants Genève"
+  description="Sources, méthode de collecte et limites connues des données de la carte des sorties enfants à Genève."
+>
+  <article class="page">
+    <p class="retour"><a href="/">← Retour à la carte</a></p>
+
+    <h1>D'où viennent ces données&nbsp;?</h1>
+
+    <p class="chapeau">
+      Cette carte rassemble {stats.lieux} lieux du canton de Genève&nbsp;: {stats.sorties} sorties
+      et {stats.services} services aux familles. {stats.cartographies} sont positionnés sur la carte,
+      {stats.sansGps} n'ont pas pu l'être.
+    </p>
+
+    <h2>Sources</h2>
+    <dl class="sources">
+      <div>
+        <dt>Nom, catégorie, âge, tarif, adresse</dt>
+        <dd>
+          Recensement à partir de <strong>genevafamily.ch</strong>, complété à la main. Les tags y
+          sont tronqués après trois entrées&nbsp;: certains lieux ont donc moins de mots-clés
+          qu'en réalité.
+        </dd>
+      </div>
+      <div>
+        <dt>Coordonnées, téléphone, horaires, note</dt>
+        <dd>
+          <strong>Google Places</strong> pour une partie des lieux, puis
+          <strong>Nominatim / OpenStreetMap</strong> pour géocoder les adresses restantes. Une
+          position issue du géocodage est signalée dans la fiche&nbsp;; quand seule la rue a pu être
+          retrouvée, le marqueur est tracé en pointillés.
+        </dd>
+      </div>
+      <div>
+        <dt>Fond de carte</dt>
+        <dd>OpenStreetMap, tuiles CARTO Voyager.</dd>
+      </div>
+    </dl>
+
+    <h2>Ce qui manque encore</h2>
+    <ul class="lacunes">
+      {
+        lacunes.map((l) => (
+          <li>
+            <strong>{l.champ}</strong>
+            <span>{l.detail}</span>
+          </li>
+        ))
+      }
+    </ul>
+
+    <h2>À vérifier avant de partir</h2>
+    <p>
+      Ces points ont été contrôlés le {verifieLe}. Le reste de la liste n'a fait l'objet d'aucune
+      vérification d'existence ou d'ouverture&nbsp;: considérez la carte comme un point de départ,
+      pas comme une garantie.
+    </p>
+    <ul class="alertes-liste">
+      {
+        alertes.map((a) => (
+          <li>
+            <strong>{a.titre}</strong>
+            <span>{a.texte}</span>
+          </li>
+        ))
+      }
+    </ul>
+
+    <h2>Corrections repérées</h2>
+    <p>
+      Deux adresses erronées de genevafamily.ch ont été rectifiées&nbsp;: la
+      <em>Maison de la Créativité</em> (chemin Calandrini 7, 1231 Chêne-Bougeries, et non chemin de
+      la Gradelle) et le <em>cinéma Bio</em> de Carouge (donné à Confignon). Cinq doublons ont été
+      fusionnés.
+    </p>
+
+    <p class="pied">
+      Données générées le {genereLe}. Une erreur, un lieu oublié&nbsp;?
+      <a href="mailto:barbarin.louise@gmail.com">Signalez-le</a>.
+    </p>
+  </article>
+</Base>
+
+<style>
+  .page {
+    max-width: 44rem;
+    margin: 0 auto;
+    padding: 1.5rem clamp(1rem, 5vw, 2rem) 4rem;
+    line-height: 1.65;
+  }
+
+  .retour a {
+    font-size: 0.88rem;
+    font-weight: 700;
+    text-decoration: none;
+  }
+
+  h1 {
+    font-size: clamp(1.5rem, 5vw, 2rem);
+    line-height: 1.15;
+    margin: 0.5rem 0 1rem;
+  }
+
+  h2 {
+    margin: 2.2rem 0 0.7rem;
+    font-size: 1.15rem;
+  }
+
+  .chapeau {
+    font-size: 1.05rem;
+    color: var(--encre-doux);
+  }
+
+  .sources {
+    margin: 0;
+    display: grid;
+    gap: 1rem;
+  }
+
+  .sources dt {
+    font-weight: 800;
+  }
+
+  .sources dd {
+    margin: 0.15rem 0 0;
+    color: var(--encre-doux);
+  }
+
+  .lacunes,
+  .alertes-liste {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    gap: 0.6rem;
+  }
+
+  .lacunes li,
+  .alertes-liste li {
+    display: grid;
+    gap: 0.1rem;
+    padding: 0.65rem 0.85rem;
+    border: 1px solid var(--bord);
+    border-radius: var(--rayon-s);
+    background: var(--carte);
+  }
+
+  .alertes-liste li {
+    border-color: var(--alerte-bord);
+    background: var(--alerte-fond);
+  }
+
+  .lacunes span,
+  .alertes-liste span {
+    font-size: 0.9rem;
+    color: var(--encre-doux);
+  }
+
+  .alertes-liste span {
+    color: var(--alerte-texte);
+  }
+
+  .pied {
+    margin-top: 2.5rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--bord);
+    font-size: 0.85rem;
+    color: var(--encre-doux);
+  }
+</style>

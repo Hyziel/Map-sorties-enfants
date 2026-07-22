@@ -1,0 +1,12 @@
+node_modules/
+dist/
+.astro/
+
+# Généré au build depuis data/activités.xlsx (npm run data)
+src/data/lieux.json
+
+.DS_Store
+.env
+.env.production
+*.log
+.netlify/
