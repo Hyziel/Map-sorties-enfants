@@ -193,7 +193,7 @@ retenus.sort((a, b) => a.nom.localeCompare(b.nom, 'fr'));
 /* --- Communes manquantes, par géocodage inverse Nominatim --- */
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
-const UA = 'sorties-enfants-geneve/0.1 (carte des sorties famille, contact: barbarin.louise@gmail.com)';
+const UA = 'sorties-enfants-geneve/0.1 (+https://sorties-enfants-geneve.netlify.app)';
 
 // Cache des communes, pour qu'une seconde exécution ne réinterroge pas
 // Nominatim. Clé : coordonnées arrondies à ~100 m.

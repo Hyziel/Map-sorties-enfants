@@ -9,7 +9,7 @@
 import { readFileSync, writeFileSync, existsSync } from 'node:fs';
 import { lireSources } from './sources.mjs';
 
-const UA = 'sorties-enfants-geneve/0.1 (carte des sorties famille, contact: barbarin.louise@gmail.com)';
+const UA = 'sorties-enfants-geneve/0.1 (+https://sorties-enfants-geneve.netlify.app)';
 const CACHE = new URL('../data/geocache.json', import.meta.url);
 
 const cache = existsSync(CACHE) ? JSON.parse(readFileSync(CACHE, 'utf8')) : {};
