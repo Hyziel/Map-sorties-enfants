@@ -333,8 +333,16 @@ for (const l of lieux) {
   parCle.set(k, garde);
 }
 
-// Une étape d'événement déjà passée n'a plus rien à faire sur la carte.
-const finaux = [...parCle.values()].filter((l) => l.periode?.statut !== 'termine');
+// Les événements terminés sont retirés ici, mais c'est le navigateur qui fait
+// autorité : il refait le tri à chaque visite avec la date du jour. Sans cela,
+// un site statique continuerait d'afficher un événement fini tant que personne
+// ne relance le build. On purge quand même au build pour ne pas transporter
+// indéfiniment les éditions des années passées.
+const LIMITE = new Date(AUJOURDHUI);
+LIMITE.setMonth(LIMITE.getMonth() - 2);
+const finaux = [...parCle.values()].filter(
+  (l) => !l.periode?.fin || new Date(l.periode.fin) >= LIMITE
+);
 stats.termines = parCle.size - finaux.length;
 
 // Identifiants stables (utilisés dans l'URL : #lieu=parc-la-grange).

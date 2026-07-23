@@ -64,9 +64,28 @@ interface Donnees {
 /* Données et éléments                                                 */
 /* ------------------------------------------------------------------ */
 
-const donnees: Donnees = JSON.parse(
-  document.getElementById('donnees')!.textContent as string
-);
+const brut: Donnees = JSON.parse(document.getElementById('donnees')!.textContent as string);
+
+/**
+ * Le statut des événements est recalculé ici, dans le navigateur, avec la date
+ * du jour. Le site est statique : sans ce recalcul, un événement terminé
+ * resterait affiché jusqu'au prochain build. Là, il disparaît tout seul.
+ */
+const AUJOURDHUI = new Date(new Date().toISOString().slice(0, 10));
+
+const donnees: Donnees = {
+  ...brut,
+  lieux: brut.lieux
+    .map((l) => {
+      if (!l.periode) return l;
+      const fin = l.periode.fin ? new Date(l.periode.fin) : null;
+      const debut = l.periode.debut ? new Date(l.periode.debut) : null;
+      const statut =
+        fin && fin < AUJOURDHUI ? 'termine' : debut && debut > AUJOURDHUI ? 'avenir' : 'encours';
+      return { ...l, periode: { ...l.periode, statut } };
+    })
+    .filter((l) => l.periode?.statut !== 'termine'),
+};
 
 const $ = <T extends HTMLElement>(id: string) => document.getElementById(id) as T;
 
@@ -98,6 +117,7 @@ const etat = {
   lieu: '',
   commune: '',
   categories: new Set<string>(),
+  saison: false,
   selection: null as string | null,
 };
 
@@ -122,6 +142,9 @@ for (const l of donnees.lieux) {
 }
 
 function correspond(l: Lieu): boolean {
+  // Filtre transversal : tout ce qui porte des dates, quelle que soit la
+  // catégorie. Les guinguettes sont en Cafés, elles doivent sortir aussi.
+  if (etat.saison && !l.periode) return false;
   if (etat.q && !index.get(l.id)!.includes(etat.q)) return false;
   if (etat.prix && l.prix !== etat.prix && l.prix !== 'mixte') return false;
   if (etat.commune && l.commune !== etat.commune) return false;
@@ -214,7 +237,12 @@ function itineraire(l: Lieu): string {
       )}`;
 }
 
-const jour = new Intl.DateTimeFormat('fr-CH', { day: 'numeric', month: 'long' });
+const jourMois = new Intl.DateTimeFormat('fr-CH', { day: 'numeric', month: 'long' });
+
+/** « 1 septembre » se dit « 1er septembre ». */
+const jour = {
+  format: (d: Date) => jourMois.format(d).replace(/^1 /, '1er '),
+};
 
 /**
  * Badge de période pour les événements datés : « En ce moment, jusqu'au 26
@@ -228,15 +256,23 @@ function badgePeriode(l: Lieu): string {
   const d = dDate ? jour.format(dDate) : '';
   const f = fDate ? jour.format(fDate) : '';
 
-  // « Du 9 au 13 septembre » plutôt que « Du 9 septembre au 13 septembre ».
+  // « Du 9 au 13 septembre » plutôt que « Du 9 septembre au 13 septembre »,
+  // et « Le 15 août » quand l'événement tient sur une seule journée.
+  const memeJour = debut && fin && debut === fin;
   const memeMois = dDate && fDate && dDate.getMonth() === fDate.getMonth();
-  const plage = memeMois ? `Du ${dDate.getDate()} au ${f}` : `Du ${d} au ${f}`;
+  const plage = memeJour
+    ? `Le ${f}`
+    : memeMois
+      ? `Du ${dDate!.getDate()} au ${f}`
+      : `Du ${d} au ${f}`;
 
   const texte =
     statut === 'encours'
-      ? f
-        ? `En ce moment, jusqu'au ${f}`
-        : 'En ce moment'
+      ? memeJour
+        ? "Aujourd'hui"
+        : f
+          ? `En ce moment, jusqu'au ${f}`
+          : 'En ce moment'
       : d && f
         ? plage
         : `À partir du ${d}`;
@@ -377,7 +413,7 @@ let cadrageInitial: L.LatLngBounds | null = null;
 
 function filtresActifs(): boolean {
   return Boolean(
-    etat.q || etat.age !== null || etat.prix || etat.lieu || etat.commune || etat.categories.size
+    etat.q || etat.age !== null || etat.prix || etat.lieu || etat.commune || etat.categories.size || etat.saison
   );
 }
 
@@ -543,7 +579,15 @@ for (const p of puces) {
   });
 }
 
+$('saison').addEventListener('click', () => {
+  etat.saison = !etat.saison;
+  $('saison').setAttribute('aria-pressed', String(etat.saison));
+  rendre();
+});
+
 elReinit.addEventListener('click', () => {
+  etat.saison = false;
+  $('saison').setAttribute('aria-pressed', 'false');
   etat.q = '';
   etat.age = null;
   etat.prix = '';

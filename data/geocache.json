@@ -1003,5 +1003,142 @@
     "precision": "exacte",
     "matched": "2, Chemin de la Colline, Petit-Lancy, Lancy, Genève, 1212, Schweiz/Suisse/Svizzera/Svizra",
     "variant": "Chemin de la Colline 2, 1212 Lancy"
+  },
+  "Parc La Grange, Quai Gustave-Ador, 1207 Genève": {
+    "lat": 46.2056076,
+    "lon": 6.1578787,
+    "precision": "rue",
+    "matched": "Quai Gustave-Ador, Villereuse, Eaux-Vives, Genève, 1207, Schweiz/Suisse/Svizzera/Svizra",
+    "variant": "Quai Gustave-Ador, 1207 Genève"
+  },
+  "Rue de la Campagne-Charnaux, 1217 Meyrin": {
+    "lat": 46.2298547,
+    "lon": 6.0744048,
+    "precision": "rue",
+    "matched": "Rue de la Campagne-Charnaux, Meyrin, Genève, 1217, Schweiz/Suisse/Svizzera/Svizra"
+  },
+  "Place de Sardaigne, 1227 Carouge": {
+    "lat": 46.1839456,
+    "lon": 6.1387695,
+    "precision": "exacte",
+    "matched": "Place de Sardaigne, Pinchat, La Praille, Carouge, Genève, 1227, Schweiz/Suisse/Svizzera/Svizra"
+  },
+  "Parc Sismondi, 1224 Chêne-Bougeries": null,
+  "Parc Château-Pictet, 1218 Le Grand-Saconnex": null,
+  "Plage de la Savonnière, 1245 Collonge-Bellerive": null,
+  "Route des Chevaliers-de-Malte 3, 1228 Plan-les-Ouates": {
+    "lat": 46.1679969,
+    "lon": 6.1184106,
+    "precision": "exacte",
+    "matched": "Mairie de Plan-les-Ouates, 3, Route des Chevaliers-de-Malte, Saconnex-d'Arve-Dessous, Plan-les-Ouates, Genève, 1228, Schweiz/Suisse/Svizzera/Svizra"
+  },
+  "Place du Lignon, 1219 Le Lignon": {
+    "lat": 46.203785,
+    "lon": 6.0954684,
+    "precision": "rue",
+    "matched": "Place du Lignon, Le Lignon, Châtelaine, Vernier, Genève, 1219, Schweiz/Suisse/Svizzera/Svizra"
+  },
+  "Promenade du Pin, 1204 Genève": {
+    "lat": 46.1983882,
+    "lon": 6.150275,
+    "precision": "rue",
+    "matched": "Promenade du Pin, Vieille-Ville, Les Tranchées, Cité, Genève, 1204, Schweiz/Suisse/Svizzera/Svizra"
+  },
+  "Rue de Monthoux 32, 1201 Genève": {
+    "lat": 46.2106812,
+    "lon": 6.1482273,
+    "precision": "exacte",
+    "matched": "32, Rue De-Monthoux, Pâquis, Genève, 1201, Schweiz/Suisse/Svizzera/Svizra"
+  },
+  "Place de la Navigation, 1201 Genève": {
+    "lat": 46.2118099,
+    "lon": 6.1497599,
+    "precision": "rue",
+    "matched": "Place de la Navigation, Pâquis, Genève, 1201, Schweiz/Suisse/Svizzera/Svizra"
+  },
+  "Quai Gustave-Ador, 1207 Genève": {
+    "lat": 46.2056076,
+    "lon": 6.1578787,
+    "precision": "rue",
+    "matched": "Quai Gustave-Ador, Villereuse, Eaux-Vives, Genève, 1207, Schweiz/Suisse/Svizzera/Svizra"
+  },
+  "Place des Grottes, 1201 Genève": {
+    "lat": 46.2100594,
+    "lon": 6.1397405,
+    "precision": "rue",
+    "matched": "Place des Grottes, Les Grottes, Grottes et Saint-Gervais, Genève, 1201, Schweiz/Suisse/Svizzera/Svizra"
+  },
+  "Rue Anne-Torcapel 2, 1202 Genève": {
+    "lat": 46.2189428,
+    "lon": 6.146746,
+    "precision": "exacte",
+    "matched": "Artspace, 2, Rue Anne-Torcapel, Sécheron, Pâquis, Genève, 1202, Schweiz/Suisse/Svizzera/Svizra"
+  },
+  "Parc Trembley, Avenue Wendt, 1203 Genève": {
+    "lat": 46.2086411,
+    "lon": 6.1269187,
+    "precision": "rue",
+    "matched": "Avenue Wendt, Les Charmilles, Les Délices, Saint-Jean et Charmilles, Genève, 1203, Schweiz/Suisse/Svizzera/Svizra",
+    "variant": "Avenue Wendt, 1203 Genève"
+  },
+  "Place de Neuve 1, 1204 Genève": {
+    "lat": 46.2015986,
+    "lon": 6.1435696,
+    "precision": "exacte",
+    "matched": "1, Place Neuve, Vieille-Ville, Les Tranchées, Cité, Genève, 1204, Schweiz/Suisse/Svizzera/Svizra"
+  },
+  "Boulevard Carl-Vogt 65, 1205 Genève": {
+    "lat": 46.1977904,
+    "lon": 6.1373069,
+    "precision": "exacte",
+    "matched": "65, Boulevard Carl-Vogt, Jonction, Coulouvrenière, Genève, 1205, Schweiz/Suisse/Svizzera/Svizra"
+  },
+  "Chemin de l'Impératrice 1, 1292 Chambésy": {
+    "lat": 46.2276319,
+    "lon": 6.1467386,
+    "precision": "exacte",
+    "matched": "Villa Le Chêne, 1, Chemin de l'Impératrice, Pâquis, Pregny-Chambésy, Genève, 1292, Schweiz/Suisse/Svizzera/Svizra"
+  },
+  "Chemin du 23-Août 5, 1205 Genève": {
+    "lat": 46.2026173,
+    "lon": 6.1348271,
+    "precision": "exacte",
+    "matched": "FMAC (Fonds d’art contemporain de la Ville de Genève), 5, Chemin du 23-Août, Jonction, Coulouvrenière, Genève, 1205, Schweiz/Suisse/Svizzera/Svizra"
+  },
+  "Rue Charles-Galland 2, 1206 Genève": {
+    "lat": 46.1992351,
+    "lon": 6.151634,
+    "precision": "exacte",
+    "matched": "Musée d'Art et d'Histoire, 2, Rue Charles-Galland, Vieille-Ville, Les Tranchées, Cité, Genève, 1205, Schweiz/Suisse/Svizzera/Svizra"
+  },
+  "Route François-Peyrot 30, 1218 Le Grand-Saconnex": {
+    "lat": 46.2361642,
+    "lon": 6.1159919,
+    "precision": "exacte",
+    "matched": "Palexpo-Halle 7, 30, Route François-Peyrot, Octagon, Le Grand-Saconnex, Genève, 1218, Schweiz/Suisse/Svizzera/Svizra"
+  },
+  "Promenade des Lavandières, 1201 Genève": {
+    "lat": 46.2046918,
+    "lon": 6.1404487,
+    "precision": "rue",
+    "matched": "Promenade des Lavandières, Saint-Gervais, Grottes et Saint-Gervais, Genève, 1204, Schweiz/Suisse/Svizzera/Svizra"
+  },
+  "1227 Les Acacias": {
+    "lat": 46.1915687,
+    "lon": 6.1335971,
+    "precision": "exacte",
+    "matched": "Les Acacias, Genève, Schweiz/Suisse/Svizzera/Svizra"
+  },
+  "Pointe de la Jonction, 1205 Genève": {
+    "lat": 46.2011732,
+    "lon": 6.1261127,
+    "precision": "exacte",
+    "matched": "Pointe de la Jonction, Avenue de la Jonction, Dépôt TPG de La Jonction, La Queue-d'Arve, Genève, 1203, Schweiz/Suisse/Svizzera/Svizra"
+  },
+  "1205 Genève": {
+    "lat": 46.1965751,
+    "lon": 6.1414389,
+    "precision": "exacte",
+    "matched": "1205, Plainpalais, Genève, Schweiz/Suisse/Svizzera/Svizra"
   }
 }
