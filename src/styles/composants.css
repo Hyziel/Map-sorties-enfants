@@ -97,12 +97,59 @@
   border-color: var(--bord-fort);
 }
 
+/* Événements datés : la période passe avant tout le reste. */
+.badge.periode {
+  border-color: #e0a15f;
+  color: #8a5011;
+  background: #fdf1e2;
+}
+
+.badge.periode.encours {
+  border-color: #d4713a;
+  background: #fbe3d2;
+  color: #8a3a11;
+}
+
+/* Le `:not([data-theme='clair'])` laisse le bouton de bascule reprendre la
+   main : sans lui, forcer le thème clair garderait ces couleurs sombres. */
 @media (prefers-color-scheme: dark) {
-  .badge.gratuit {
+  :root:not([data-theme='clair']) .badge.periode {
+    border-color: #6b4a24;
+    background: #332514;
+    color: #eab97e;
+  }
+
+  :root:not([data-theme='clair']) .badge.periode.encours {
+    border-color: #8a4f28;
+    background: #3d2415;
+    color: #f2b184;
+  }
+}
+
+:root[data-theme='sombre'] .badge.periode {
+  border-color: #6b4a24;
+  background: #332514;
+  color: #eab97e;
+}
+
+:root[data-theme='sombre'] .badge.periode.encours {
+  border-color: #8a4f28;
+  background: #3d2415;
+  color: #f2b184;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='clair']) .badge.gratuit {
     color: #8fd6a1;
     background: #1c3324;
     border-color: #35603f;
   }
+}
+
+:root[data-theme='sombre'] .badge.gratuit {
+  color: #8fd6a1;
+  background: #1c3324;
+  border-color: #35603f;
 }
 
 /* --- Alertes --- */

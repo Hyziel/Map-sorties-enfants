@@ -1,0 +1,170 @@
+{
+ "aire-jeux-jardin-eden": {
+  "horaires": "Lun-dim 09h-21h",
+  "source": "Aire de jeux le jardin d'Eden",
+  "brut": "Mo-Su 09:00-21:00",
+  "distance": 0,
+  "confiance": 1
+ },
+ "auberge-communale-carouge": {
+  "horaires": "Lun-sam 12h-14h30, 19h-22h30 ; dim 11h30-15h, 19h-22h",
+  "source": "Auberge communale de Carouge",
+  "brut": "Mo-Sa 12:00-14:30,19:00-22:30; Su 11:30-15:00,19:00-22:00",
+  "distance": 2,
+  "confiance": 1
+ },
+ "berges-vessy": {
+  "horaires": "Lun fermé ; mar-ven 13h-17h ; sam-dim 10h-17h",
+  "source": "Les Berges de Vessy",
+  "brut": "Mo off; Tu-Fr 13:00-17:00; Sa-Su 10:00-17:00",
+  "distance": 19,
+  "confiance": 1
+ },
+ "bibliotheque-cite": {
+  "horaires": "Mar-ven 10h-19h, sam 10h-17h, nov.-Apr: dim 13h-17h ; jours fériés fermé",
+  "source": "Bibliothèque de la Cité",
+  "brut": "Tu-Fr 10:00-19:00, Sa 10:00-17:00, Nov-Apr: Su 13:00-17:00; PH off",
+  "distance": 12,
+  "confiance": 1
+ },
+ "bibliotheque-jonction": {
+  "horaires": "Mar, jeu, ven 14h30-18h30 ; mer 09h30-18h30 ; sam 13h30-17h30 ; jours fériés fermé",
+  "source": "Bibliothèque de la Jonction",
+  "brut": "Tu,Th,Fr 14:30-18:30; We 09:30-18:30; Sa 13:30-17:30; PH off",
+  "distance": 0,
+  "confiance": 1
+ },
+ "bibliotheque-servette": {
+  "horaires": "Mar 15h-19h ; mer 10h-18h ; jeu 15h-19h ; ven 15h-19h, sam 10h-17h ; jours fériés fermé",
+  "source": "Bibliothèque municipale de la Servette",
+  "brut": "Tu 15:00-19:00; We 10:00-18:00; Th 15:00-19:00; Fr 15:00-19:00, Sa 10:00-17:00; PH off",
+  "distance": 0,
+  "confiance": 1
+ },
+ "bibliotheque-saint-jean": {
+  "horaires": "Mar, jeu-ven 14h30-18h30 ; mer 10h-18h30 ; sam 13h-17h ; jours fériés fermé",
+  "source": "Bibliothèque de Saint-Jean",
+  "brut": "Tu, Th-Fr 14:30-18:30; We 10:00-18:30; Sa 13:00-17:00; PH off",
+  "distance": 12,
+  "confiance": 1
+ },
+ "bibliotheque-eaux-vives": {
+  "horaires": "Juil. 2 - août 31 mar, jeu-ven 09h-13h ; mer 09h-17h ; août 19 - juil. 1 mar, jeu-ven 14h30-18h30 ; mer 10h30-18h30 ; sam 13h30-17h30 ; jours fériés fermé",
+  "source": "Bibliothèque municipale des Eaux-Vives",
+  "brut": "Jul 2 - Aug 31 Tu, Th-Fr 09:00-13:00; We 09:00-17:00; Aug 19 - Jul 1 Tu, Th-Fr 14:30-18:30; We 10:30-18:30; Sa 13:30-17:30; PH off",
+  "distance": 11,
+  "confiance": 1
+ },
+ "bibliotheque-paquis": {
+  "horaires": "Mar, jeu, ven 14h30-18h30 ; mer 10h-18h30 ; sam 13h-17h ; jours fériés fermé",
+  "source": "Bibliothèque Municipale des Pâquis",
+  "brut": "Tu,Th,Fr 14:30-18:30; We 10:00-18:30; Sa 13:00-17:00; PH off",
+  "distance": 0,
+  "confiance": 1
+ },
+ "bibliotheque-municipale-minoteries": {
+  "horaires": "Mar, jeu-ven 14h30-18h30 ; mer 10h-18h30 ; sam 10h-13h30 ; jours fériés fermé",
+  "source": "Bibliothèque municipale des Minoteries",
+  "brut": "Tu, Th-Fr 14:30-18:30; We 10:00-18:30; Sa 10:00-13:30; PH off",
+  "distance": 0,
+  "confiance": 1
+ },
+ "cinekid-fondation-culture-rencontre": {
+  "horaires": "Mar 16h45 \"plusieurs mardis par année\"",
+  "source": "CinéKid",
+  "brut": "Tu 16:45 \"plusieurs mardis par année\"",
+  "distance": 27,
+  "confiance": 1
+ },
+ "jardin-botanique-alpin": {
+  "horaires": "Mai 01-sept. 30: lun-dim 08h30-21h ; oct. 01-avr. 30: lun-dim 08h30-18h",
+  "source": "Jardin Botanique Alpin",
+  "brut": "May 01-Sep 30: Mo-Su 08:30-21:00; Oct 01-Apr 30: Mo-Su 08:30-18:00",
+  "distance": 0,
+  "confiance": 1
+ },
+ "etincelle-maison-quartier-jonction": {
+  "horaires": "Lun, mar, jeu, ven 13h-18h30",
+  "source": "Maison de Quartier de la Jonction",
+  "brut": "Mo,Tu,Th,Fr 13:00-18:30",
+  "distance": 31,
+  "confiance": 1
+ },
+ "pain-quotidien-champel": {
+  "horaires": "Lun-ven 07h-18h ; sam, dim 08h-18h",
+  "source": "Le Pain Quotidien",
+  "brut": "Mo-Fr 07:00-18:00; Sa,Su 08:00-18:00",
+  "distance": 0,
+  "confiance": 1
+ },
+ "ludotheque-servette": {
+  "horaires": "Mar 15h-18h ; mer 09h30-11h30, 15h-18h ; jeu 16h-18h ; ven 09h30-11h30 ; sam 09h30-11h30",
+  "source": "Ludothèque Servette",
+  "brut": "Tu 15:00-18:00; We 09:30-11:30, 15:00-18:00; Th 16:00-18:00; Fr 09:30-11:30; Sa 09:30-11:30",
+  "distance": 69,
+  "confiance": 1
+ },
+ "ludotheque-paquis": {
+  "horaires": "Lun 09h30-11h30 ; mar 16h30-18h30 ; mer 09h30-11h30, 14h30-17h30 ; jeu 09h30-11h30, 16h30-18h30 ; ven 16h-18h30 \"une fois par mois préados\" ; sam 09h-12h",
+  "source": "Ludothèque des Pâquis",
+  "brut": "Mo 09:30-11:30; Tu 16:30-18:30; We 09:30-11:30, 14:30-17:30; Th 09:30-11:30, 16:30-18:30; Fr 16:00-18:30 \"une fois par mois préados\"; Sa 09:00-12:00",
+  "distance": 24,
+  "confiance": 1
+ },
+ "ludotheque-marelle": {
+  "horaires": "Lun fermé ; mar 10h-12h ; mer 10h-12h, 14h30-17h30 ; jeu-ven 16h-18h30 ; sam 10h-12h ; vacances scolaires lun-jeu 14h30-17h30",
+  "source": "La Marelle",
+  "brut": "Mo off; Tu 10:00-12:00; We 10:00-12:00,14:30-17:30; Th-Fr 16:00-18:30; Sa 10:00-12:00; SH Mo-Th 14:30-17:30",
+  "distance": 21,
+  "confiance": 1
+ },
+ "luigia-rive-droite": {
+  "horaires": "Lun-ven 12h-14h30, 18h-22h30 ; sam, dim 11h30-22h30",
+  "source": "Luigia",
+  "brut": "Mo-Fr 12:00-14:30, 18:00-22:30; Sa, Su 11:30-22:30",
+  "distance": 39,
+  "confiance": 1
+ },
+ "luigia-rive-gauche": {
+  "horaires": "Lun-jeu 12h-14h30, 18h30-23h ; ven 12h-14h30, 18h30-23h30 ; sam 12h-23h30 ; dim 12h-22h30",
+  "source": "Luigia",
+  "brut": "Mo-Th 12:00-14:30,18:30-23:00; Fr 12:00-14:30,18:30-23:30; Sa 12:00-23:30; Su 12:00-22:30",
+  "distance": 26,
+  "confiance": 1
+ },
+ "mediatheque-ferney-voltaire": {
+  "horaires": "Lun-ven 09h-12h30, 14h-18h ; sam 09h-12h ; jours fériés fermé",
+  "source": "Ferney-Voltaire",
+  "brut": "Mo-Fr 09:00-12:30, 14:00-18:00; Sa 09:00-12:00; PH off",
+  "distance": 67,
+  "confiance": 1
+ },
+ "parc-port-choiseul": {
+  "horaires": "Lun-dim 08h-22h",
+  "source": "Parc de Port Choiseul",
+  "brut": "Mo-Su 08:00-22:00",
+  "distance": 0,
+  "confiance": 1
+ },
+ "parc-lullin": {
+  "horaires": "Ouvert en permanence",
+  "source": "Parc Lullin",
+  "brut": "24/7",
+  "distance": 0,
+  "confiance": 1
+ },
+ "place-jeux-messicoles": {
+  "horaires": "Lun-dim 07h-22h",
+  "source": "Place de jeux Messicoles",
+  "brut": "Mo-Su 07:00-22:00",
+  "distance": 0,
+  "confiance": 1
+ },
+ "wolfisberg-carouge": {
+  "horaires": "Lun-dim 06h30-19h",
+  "source": "Wolfisberg",
+  "brut": "Mo-Su 06:30-19:00",
+  "distance": 9,
+  "confiance": 1
+ }
+}

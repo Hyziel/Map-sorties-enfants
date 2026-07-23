@@ -6,6 +6,8 @@ import { readSheets } from './xlsx.mjs';
 
 const XLSX = new URL('../data/activités.xlsx', import.meta.url);
 const GEX = new URL('../data/complement-pays-de-gex.csv', import.meta.url);
+const PARCS = new URL('../data/complement-parcs.csv', import.meta.url);
+const EVENEMENTS = new URL('../data/evenements.csv', import.meta.url);
 
 /** Découpe une ligne CSV en respectant les guillemets et les "" échappés. */
 function decouper(ligne) {
@@ -68,5 +70,7 @@ export function lireSources() {
       lignes: feuilles['Services (hors sorties)'] ?? [],
     },
     { nom: 'Pays de Gex', type: 'sortie', origine: 'paysdegex', lignes: lireCsv(GEX) },
+    { nom: 'Parcs OSM', type: 'sortie', origine: 'osm', lignes: lireCsv(PARCS) },
+    { nom: 'Événements', type: 'evenement', origine: 'manuel', lignes: lireCsv(EVENEMENTS) },
   ];
 }

@@ -44,6 +44,16 @@ function variants(addr) {
   const swapped = expanded.replace(/^([^,\d]+?)\s+(\d+[a-zA-Z]?)\s*,/, '$2 $1,');
   if (swapped !== expanded) out.push(swapped);
 
+  // « Parc de la Mairie, Rue du Village 9, 1214 Vernier » : le nom du lieu en
+  // tête empêche Nominatim de reconnaître la rue. On le retire.
+  const segments = expanded.split(',');
+  if (segments.length >= 3) {
+    const sansPrefixe = segments.slice(1).join(',').trim();
+    out.push(sansPrefixe);
+    const inverse = sansPrefixe.replace(/^([^,\d]+?)\s+(\d+[a-zA-Z]?)\s*,/, '$2 $1,');
+    if (inverse !== sansPrefixe) out.push(inverse);
+  }
+
   // Sans le numéro de rue : au pire on tombe sur la bonne rue.
   const noNum = expanded.replace(/\s*\b\d+[a-zA-Z]?\b\s*,/, ',');
   if (noNum !== expanded) out.push(noNum);

@@ -11,6 +11,7 @@ import { readFileSync, writeFileSync, existsSync, mkdirSync } from 'node:fs';
 import { lireSources } from './sources.mjs';
 
 const CACHE = new URL('../data/geocache.json', import.meta.url);
+const HORAIRES_OSM = new URL('../data/horaires-osm.json', import.meta.url);
 const OUT_DIR = new URL('../src/data/', import.meta.url);
 const OUT = new URL('lieux.json', OUT_DIR);
 
@@ -28,7 +29,9 @@ const BBOX = { latMin: 46.05, latMax: 46.4, lonMin: 5.85, lonMax: 6.35 };
 const CATEGORIES = {
   parcs: { label: 'Parcs & aires de jeux', emoji: '🌳', couleur: '#8fc79b' },
   eau: { label: "Pataugeoires & jeux d'eau", emoji: '💦', couleur: '#8fcbe8' },
-  sport: { label: 'Sport & piscines', emoji: '🏊', couleur: '#7ec8c2' },
+  piscines: { label: 'Piscines & baignade', emoji: '🏊', couleur: '#6fb8d8' },
+  sport: { label: 'Sport & mouvement', emoji: '🏃', couleur: '#7ec8c2' },
+  evenement: { label: 'Événements de saison', emoji: '⛺', couleur: '#f2a65a' },
   couvert: { label: 'Jeux couverts', emoji: '🎪', couleur: '#f5a58d' },
   biblio: { label: 'Bibliothèques & ludothèques', emoji: '📚', couleur: '#b4a4dc' },
   musees: { label: 'Musées & culture', emoji: '🏛️', couleur: '#dfc48d' },
@@ -57,6 +60,9 @@ const MAP_CATEGORIE = {
   "pataugeoires & jeux d'eau": 'eau',
   'activités sportives & aquatiques': 'sport',
   'sport & aquatique': 'sport',
+  'piscines & baignade': 'piscines',
+  'sport & mouvement': 'sport',
+  'événements de saison': 'evenement',
   escalade: 'sport',
   'pumptrack & skate': 'sport',
   'aire de jeux couverte': 'couvert',
@@ -80,8 +86,14 @@ const MAP_CATEGORIE = {
   'espace bébé & allaitement': 'bebe',
 };
 
+// « Sport & aquatique » du classeur mélange la natation et le reste. On sépare
+// sur le nom : ce qui parle d'eau part en piscines, le reste en sport.
+const MOTS_AQUATIQUES =
+  /piscine|natation|nageur|nage\b|aquatique|aqua|baignade|nautique|bains?\b|swim|plage|dauphin/i;
+
 function categorie(brut, nom) {
   const key = MAP_CATEGORIE[(brut || '').toLowerCase().trim()];
+  if (key === 'sport') return MOTS_AQUATIQUES.test(nom) ? 'piscines' : 'sport';
   if (key) return key;
   // Deux lignes de la feuille Services sont sans catégorie (crèches).
   if (/crèche|vie enfantine/i.test(nom)) return 'parents';
@@ -119,10 +131,42 @@ function nombre(v) {
   return Number.isFinite(n) ? n : null;
 }
 
+// Aujourd'hui, à minuit, pour comparer des dates sans se soucier de l'heure.
+const AUJOURDHUI = new Date(new Date().toISOString().slice(0, 10));
+
+/**
+ * Période d'un événement daté. `statut` vaut 'encours', 'avenir' ou 'termine' ;
+ * les étapes terminées sont retirées plus bas.
+ */
+function periode(debut, fin) {
+  const d = (debut || '').trim();
+  const f = (fin || '').trim();
+  if (!d && !f) return null;
+
+  const dd = d ? new Date(d) : null;
+  const df = f ? new Date(f) : dd;
+  const statut = df && df < AUJOURDHUI ? 'termine' : dd && dd > AUJOURDHUI ? 'avenir' : 'encours';
+  return { debut: d, fin: f, statut };
+}
+
+/**
+ * Nettoie un texte venu d'une source : espaces superflus et tirets cadratins,
+ * que le classeur emploie abondamment dans les noms (« 372 Natation , Cours à
+ * domicile ») et qu'on ne veut nulle part sur le site.
+ */
+function net(v) {
+  return String(v ?? '')
+    .replace(/\s+—\s+/g, ', ')
+    .replace(/—/g, ',')
+    .replace(/\s+,/g, ',')
+    .replace(/,\s*,+/g, ',')
+    .trim();
+}
+
 function tags(r) {
   return (r['Tags affichés'] || '')
     .split('/')
-    .map((t) => t.trim())
+    .map((t) => net(t))
     .filter(Boolean);
 }
 
@@ -185,7 +229,7 @@ const stats = { total: 0, geocodes: 0, sansGps: 0, doublons: 0, horsZone: 0, exc
 
 for (const { lignes, type, origine } of SOURCES) {
   for (const r of lignes) {
-    const nom = (r['Nom'] || '').trim();
+    const nom = net(r['Nom']);
     if (!nom) continue;
 
     const cat = categorie(r['Catégorie'] || r['Catégorie suggérée'], nom);
@@ -195,7 +239,7 @@ for (const { lignes, type, origine } of SOURCES) {
     }
     stats.total++;
 
-    const adresse = (r['Adresse vérifiée (Google)'] || r['Adresse'] || '').trim();
+    const adresse = net(r['Adresse vérifiée (Google)'] || r['Adresse']);
     let lat = nombre(r['Latitude']);
     let lon = nombre(r['Longitude']);
     let precision = lat && lon ? 'exacte' : null;
@@ -220,7 +264,7 @@ for (const { lignes, type, origine } of SOURCES) {
     else if (precision !== 'exacte') stats.geocodes++;
 
     const commune =
-      (r['Commune'] || '').trim() ||
+      net(r['Commune']) ||
       /,\s*\d{4}\s+([^,]+)$/.exec(adresse)?.[1]?.trim() ||
       '';
 
@@ -230,26 +274,30 @@ for (const { lignes, type, origine } of SOURCES) {
       type,
       origine,
       categorie: cat,
-      emoji: (r['Emoji'] || '').trim() || CATEGORIES[cat].emoji,
+      // L'emoji découle de la seule catégorie. La colonne « Emoji » du
+      // classeur est incohérente (une goutte d'eau sur des cours de yoga, un
+      // nageur sur un pumptrack) et donnait une carte illisible.
+      emoji: CATEGORIES[cat].emoji,
       age: parseAge(r['Âge']),
-      ageBrut: (r['Âge'] || '').trim(),
+      ageBrut: net(r['Âge']),
       prix: PRIX[(r['Prix'] || '').toLowerCase().trim()] ?? null,
-      tarifPrecis: (r['Tarif précis'] || '').trim(),
+      tarifPrecis: net(r['Tarif précis']),
       lieu: LIEU[(r['Intérieur/Extérieur'] || '').toLowerCase().trim()] ?? null,
       adresse,
-      codePostal: (r['Code postal'] || '').trim(),
+      codePostal: net(r['Code postal']),
       commune,
       lat,
       lon,
       precision,
       tags: tags(r),
-      telephone: (r['Téléphone'] || '').trim(),
-      horaires: (r['Horaires'] || '').trim() === 'Non publiés' ? '' : (r['Horaires'] || '').trim(),
+      telephone: net(r['Téléphone']),
+      horaires: net(r['Horaires']) === 'Non publiés' ? '' : net(r['Horaires']),
       // Les notes et nombres d'avis Google du classeur ne sont pas repris :
       // choix éditorial, on ne classe pas les sorties par étoiles.
-      site: (r['Site web'] || '').trim(),
-      accessibilite: (r['Accessibilité poussette/PMR'] || '').trim(),
-      remarque: (r['Remarque'] || '').trim(),
+      periode: periode(r['Début'], r['Fin']),
+      site: net(r['Site web']),
+      accessibilite: net(r['Accessibilité poussette/PMR']),
+      remarque: net(r['Remarque']),
       alertes: [],
     });
   }
@@ -285,7 +333,9 @@ for (const l of lieux) {
   parCle.set(k, garde);
 }
 
-const finaux = [...parCle.values()];
+// Une étape d'événement déjà passée n'a plus rien à faire sur la carte.
+const finaux = [...parCle.values()].filter((l) => l.periode?.statut !== 'termine');
+stats.termines = parCle.size - finaux.length;
 
 // Identifiants stables (utilisés dans l'URL : #lieu=parc-la-grange).
 const vus = new Set();
@@ -299,6 +349,18 @@ for (const l of finaux) {
 
   for (const a of ALERTES) {
     if (a.test(l)) l.alertes.push({ niveau: a.niveau, texte: a.texte });
+  }
+}
+
+// Horaires récupérés d'OpenStreetMap (voir scripts/horaires-osm.mjs). Ils ne
+// remplacent jamais un horaire déjà renseigné, ils comblent les vides.
+const horairesOsm = existsSync(HORAIRES_OSM) ? JSON.parse(readFileSync(HORAIRES_OSM, 'utf8')) : {};
+stats.horaires = 0;
+for (const l of finaux) {
+  if (!l.horaires && horairesOsm[l.id]) {
+    l.horaires = horairesOsm[l.id].horaires;
+    l.horairesSource = 'osm';
+    stats.horaires++;
   }
 }
 
@@ -330,5 +392,7 @@ console.log(
   `${payload.stats.lieux} lieux écrits (${payload.stats.sorties} sorties, ${payload.stats.services} services)\n` +
     `  cartographiés : ${payload.stats.cartographies}, sans GPS : ${payload.stats.sansGps}\n` +
     `  doublons fusionnés : ${stats.doublons}, points hors zone écartés : ${stats.horsZone}\n` +
-    `  écartés (hors loisir : santé, espaces bébé) : ${stats.exclus}`
+    `  écartés (hors loisir : santé, espaces bébé) : ${stats.exclus}\n` +
+    `  étapes d'événement terminées : ${stats.termines}\n` +
+    `  horaires complétés depuis OSM : ${stats.horaires}`
 );

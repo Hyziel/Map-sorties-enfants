@@ -9,10 +9,19 @@ couronne. Site statique (Astro + Leaflet), déployé sur Netlify.
 partir du classeur, jamais l'inverse : pour corriger un lieu, on modifie le
 classeur puis on relance le build.
 
-Un second fichier, `data/complement-pays-de-gex.csv`, ajoute les lieux relevés
-dans l'annuaire de Pays de Gex agglo. Il suit les mêmes colonnes que le
-classeur et vit à côté plutôt que dedans, pour ne pas avoir à réécrire le
-`.xlsx`. `scripts/sources.mjs` réunit les deux.
+D'autres fichiers CSV complètent le classeur, avec les mêmes colonnes. Ils
+vivent à côté plutôt que dedans, pour ne pas avoir à réécrire le `.xlsx`.
+`scripts/sources.mjs` réunit le tout.
+
+| Fichier | Contenu | Produit par |
+| --- | --- | --- |
+| `complement-pays-de-gex.csv` | Annuaire de Pays de Gex agglo | à la main |
+| `complement-parcs.csv` | Parcs, jardins et aires de jeux | `parcs-osm.mjs` |
+| `evenements.csv` | Événements datés | à la main |
+
+`evenements.csv` a deux colonnes de plus, `Début` et `Fin` (format AAAA-MM-JJ).
+Une étape dont la date de fin est passée disparaît toute seule de la carte au
+build suivant : rien à nettoyer à la main.
 
 Trois feuilles alimentent la carte :
 
@@ -35,7 +44,13 @@ npm install
 npm run dev      # reconstruit la donnée puis lance le serveur de dev
 npm run build    # reconstruit la donnée puis génère dist/
 npm run geocode  # géocode les adresses sans GPS (lent, à la demande)
+npm run parcs    # réinterroge OpenStreetMap pour les parcs (écrase le CSV)
+npm run horaires # complète les horaires manquants depuis OpenStreetMap
 ```
+
+Les trois dernières commandes interrogent des services externes et sont lentes.
+Elles ne tournent pas au build : on les lance à la main, puis on versionne leur
+résultat.
 
 ## Chaîne de traitement
 

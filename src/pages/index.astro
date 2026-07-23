@@ -81,20 +81,32 @@ const TRANCHES = [
       </div>
     </div>
 
-    <div class="ligne-2" role="group" aria-label="Catégories">
-      {
-        Object.entries(categories).map(([id, c]) => (
-          <button
-            type="button"
-            class="puce"
-            data-cat={id}
-            aria-pressed="false"
-            style={`--puce: ${c.couleur}`}
-          >
-            <span aria-hidden="true">{c.emoji}</span> {c.label}
-          </button>
-        ))
-      }
+    <div class="rangee-cat">
+      <button type="button" class="fleche gauche" id="cat-gauche" tabindex="-1" hidden>
+        <span aria-hidden="true">‹</span>
+        <span class="sr-only">Voir les catégories précédentes</span>
+      </button>
+
+      <div class="ligne-2" id="ligne-cat" role="group" aria-label="Catégories">
+        {
+          Object.entries(categories).map(([id, c]) => (
+            <button
+              type="button"
+              class="puce"
+              data-cat={id}
+              aria-pressed="false"
+              style={`--puce: ${c.couleur}`}
+            >
+              <span aria-hidden="true">{c.emoji}</span> {c.label}
+            </button>
+          ))
+        }
+      </div>
+
+      <button type="button" class="fleche droite" id="cat-droite" tabindex="-1" hidden>
+        <span aria-hidden="true">›</span>
+        <span class="sr-only">Voir les catégories suivantes</span>
+      </button>
     </div>
   </form>
 
@@ -187,6 +199,7 @@ const TRANCHES = [
     border-bottom: 1px solid var(--bord);
     padding: 0.6rem clamp(0.75rem, 3vw, 1.5rem);
     display: grid;
+    grid-template-columns: minmax(0, 1fr);
     gap: 0.5rem;
   }
 
@@ -255,12 +268,90 @@ const TRANCHES = [
     cursor: pointer;
   }
 
+  .rangee-cat {
+    position: relative;
+    /* Sans cela l'élément de grille prend la largeur de son contenu et c'est
+       la barre de filtres qui déborde, au lieu de la rangée qui défile. */
+    min-width: 0;
+  }
+
   .ligne-2 {
     display: flex;
     gap: 0.4rem;
     overflow-x: auto;
     padding-bottom: 0.15rem;
-    scrollbar-width: thin;
+    scroll-behavior: smooth;
+    /* La barre native est masquée : les flèches assurent le défilement. */
+    scrollbar-width: none;
+  }
+
+  .ligne-2::-webkit-scrollbar {
+    display: none;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .ligne-2 {
+      scroll-behavior: auto;
+    }
+  }
+
+  /* Flèches de défilement, affichées seulement quand la rangée déborde.
+     Le dégradé laisse deviner qu'il reste des catégories derrière. */
+  .fleche {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 2;
+    display: grid;
+    place-items: center;
+    width: 1.9rem;
+    height: 1.9rem;
+    padding: 0;
+    border: 1px solid var(--bord-fort);
+    border-radius: 50%;
+    background: var(--carte);
+    box-shadow: var(--ombre);
+    font-size: 1.1rem;
+    line-height: 1;
+    cursor: pointer;
+  }
+
+  /* `display: grid` l'emporterait sur le `display: none` de [hidden]. */
+  .fleche[hidden] {
+    display: none;
+  }
+
+  .fleche:hover {
+    border-color: var(--accent);
+    background: var(--surlignage);
+  }
+
+  .fleche.gauche {
+    left: 0;
+  }
+
+  .fleche.droite {
+    right: 0;
+  }
+
+  .fleche::after {
+    content: '';
+    position: absolute;
+    top: -0.35rem;
+    bottom: -0.35rem;
+    width: 1.6rem;
+    z-index: -1;
+    pointer-events: none;
+  }
+
+  .fleche.gauche::after {
+    left: -0.35rem;
+    background: linear-gradient(to right, var(--carte) 55%, transparent);
+  }
+
+  .fleche.droite::after {
+    right: -0.35rem;
+    background: linear-gradient(to left, var(--carte) 55%, transparent);
   }
 
   .puce {

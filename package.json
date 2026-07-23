@@ -9,7 +9,9 @@
     "dev": "npm run data && astro dev",
     "build": "npm run data && astro build",
     "preview": "astro preview",
-    "check": "astro check"
+    "check": "astro check",
+    "parcs": "node scripts/parcs-osm.mjs",
+    "horaires": "node scripts/horaires-osm.mjs"
   },
   "dependencies": {
     "@fontsource-variable/nunito": "^5.1.1",

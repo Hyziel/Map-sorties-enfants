@@ -120,8 +120,6 @@
     "precision": "exacte",
     "matched": "Ecole de l'Europe, 42, Avenue d'Aïre, Les Charmilles, Les Ouches, Saint-Jean et Charmilles, Genève, 1203, Schweiz/Suisse/Svizzera/Svizra"
   },
-  "Parcs et préaux, Genève": null,
-  "Cité Léopard, Rue des Horlogers 13, 1227 Carouge": null,
   "Avenue de Vaudagne 13 bis, 1217 Meyrin": {
     "lat": 46.2309772,
     "lon": 6.0733197,
@@ -249,21 +247,18 @@
     "precision": "exacte",
     "matched": "20, Chemin de Beau-Soleil, Crêts-de-Champel, Champel, Genève, 1206, Schweiz/Suisse/Svizzera/Svizra"
   },
-  "Rue de Loëx 99, 1232 Confignon": null,
   "Avenue Miremont 15, 1206 Genève": {
     "lat": 46.1905571,
     "lon": 6.1553773,
     "precision": "exacte",
     "matched": "15, Avenue de Miremont, Crêts-de-Champel, Champel, Genève, 1206, Schweiz/Suisse/Svizzera/Svizra"
   },
-  "Veyrier (adresse exacte à confirmer sur leur site)": null,
   "Rue Michel Chauvet 22, 1208 Genève": {
     "lat": 46.1963925,
     "lon": 6.1590801,
     "precision": "exacte",
     "matched": "Ecole de Contamines, 22, Rue Michel-Chauvet, Florissant, Champel, Genève, 1208, Schweiz/Suisse/Svizzera/Svizra"
   },
-  "Chem. de Riantbosson 11, 1217 Meyrin": null,
   "Rue de Savoie 4, 1205 Genève": {
     "lat": 46.2006691,
     "lon": 6.1671234,
@@ -282,14 +277,12 @@
     "precision": "exacte",
     "matched": "4, Rue du Château, Saint-Jean, Les Délices, Saint-Jean et Charmilles, Genève, 1203, Schweiz/Suisse/Svizzera/Svizra"
   },
-  "Salles de gym du Cycle d'Orientation des Voirets, Genève": null,
   "Chemin du Pavillon 2, 1218 Le Grand-Saconnex": {
     "lat": 46.2381729,
     "lon": 6.1228783,
     "precision": "exacte",
     "matched": "DuPont, 2, Chemin du Pavillon, Octagon, Le Grand-Saconnex, Genève, 1218, Schweiz/Suisse/Svizzera/Svizra"
   },
-  "Avenue de Rosemont 14, 1208 Genève": null,
   "Chemin de Mouille-Galand 1, 1214 Vernier": {
     "lat": 46.2132584,
     "lon": 6.079256,
@@ -320,7 +313,6 @@
     "precision": "exacte",
     "matched": "16, Rue de Montbrillant, Les Grottes, Grottes et Saint-Gervais, Genève, 1201, Schweiz/Suisse/Svizzera/Svizra"
   },
-  "Séances itinérantes à Genève (souvent au Cinéma Nord-Sud ou au Cinéma Bio)": null,
   "Chemin de la Gravière 10, 1227 Les Acacias": {
     "lat": 46.1972297,
     "lon": 6.1308469,
@@ -375,7 +367,6 @@
     "precision": "exacte",
     "matched": "2, Chemin de la Tourelle, Moillebeau, Le Petit-Saconnex, Petit-Saconnex et Servette, Genève, 1209, Schweiz/Suisse/Svizzera/Svizra"
   },
-  "Rue du Nant-d'Avril 148, 1217 Meyrin": null,
   "Place du Temple 5, 1227 Carouge": {
     "lat": 46.184992,
     "lon": 6.1407615,
@@ -418,24 +409,18 @@
     "precision": "rue",
     "matched": "Avenue Peschier, Florissant, Champel, Genève, 1206, Schweiz/Suisse/Svizzera/Svizra"
   },
-  "Parc La Grange, 1207 Genève": null,
-  "Parc Beaulieu, 1202 Genève": null,
   "Parc des Franchises, 1202 Genève": {
     "lat": 46.2111107,
     "lon": 6.1165071,
     "precision": "exacte",
     "matched": "Place de jeux du Parc des Franchises, Avenue de Châtelaine, Les Ouches, Saint-Jean et Charmilles, Genève, 1203, Schweiz/Suisse/Svizzera/Svizra"
   },
-  "Parc Mon-Repos, 1202 Genève": null,
-  "Parc de Bourgogne, 1203 Genève": null,
   "Parc Trembley, 1209 Genève": {
     "lat": 46.2188853,
     "lon": 6.130466,
     "precision": "rue",
     "matched": "Parc Trembley, Moillebeau, Le Petit-Saconnex, Petit-Saconnex et Servette, Genève, 1209, Schweiz/Suisse/Svizzera/Svizra"
   },
-  "Parc Promeneur solitaire, 1203 Genève": null,
-  "Avenue de la Paix / Avenue Giuseppe-Motta, 1202 Genève (entrée principale : Pestalozzi 46)": null,
   "Rue de Montbrillant, 1201 Genève": {
     "lat": 46.2123165,
     "lon": 6.1412511,
@@ -502,7 +487,6 @@
     "precision": "exacte",
     "matched": "21, Chemin du Signal, Saint-Mathieu, Lully, Bernex, Genève, 1233, Schweiz/Suisse/Svizzera/Svizra"
   },
-  "Avenue des Grandes-Communes 68, 1212 Grand-Lancy": null,
   "Avenue des Communes-Réunies 73, 1212 Grand-Lancy": {
     "lat": 46.1728788,
     "lon": 6.1237758,
@@ -521,7 +505,6 @@
     "precision": "exacte",
     "matched": "Ecole de Pont-Rouge, 16, Chemin des Mérinos, Grand-Lancy, Lancy, Genève, 1212, Schweiz/Suisse/Svizzera/Svizra"
   },
-  "Route du Saint-Georges 86, 1213 Petit-Lancy": null,
   "Route de Covéry 101, 1246 Corsier": {
     "lat": 46.2571789,
     "lon": 6.2460424,
@@ -534,7 +517,6 @@
     "precision": "rue",
     "matched": "Chemin des Contamines, Saconnex-d'Arve-Dessus, Plan-les-Ouates, Genève, 1257, Schweiz/Suisse/Svizzera/Svizra"
   },
-  "Passerelle du Pont des Bergues, 1204 Genève": null,
   "Av. de Vaudagne 16, 1217 Meyrin": {
     "lat": 46.2313548,
     "lon": 6.0750315,
@@ -577,7 +559,6 @@
     "precision": "exacte",
     "matched": "Airloop x La Plage, 28, Route des Jeunes, Grand-Lancy, Lancy, Genève, 1212, Schweiz/Suisse/Svizzera/Svizra"
   },
-  "Aula du collège de Saussure, Vieux-Chemin-d'Onex 9, 1213 Petit-Lancy": null,
   "Rue de Lausanne 45, 1201 Genève": {
     "lat": 46.2137144,
     "lon": 6.1455046,
@@ -596,7 +577,6 @@
     "precision": "exacte",
     "matched": "6, Rue Willy-Donze, La Roseraie, Plainpalais, Genève, 1205, Schweiz/Suisse/Svizzera/Svizra"
   },
-  "Chem. des Grangettes 7/Bâtiment G, 1224 Chêne-Bougeries": null,
   "Av. de la Gare des Eaux-Vives 3, 1207 Genève": {
     "lat": 46.2005775,
     "lon": 6.165317,
@@ -609,7 +589,6 @@
     "precision": "exacte",
     "matched": "Garde Pédiatrique Lancy, 70, Route du Pont-Butin, Petit-Lancy, Lancy, Genève, 1213, Schweiz/Suisse/Svizzera/Svizra"
   },
-  "Rue de Montchoisy 50, 1207 Genève (1er étage)": null,
   "Rue du Fort-Barreau 19, 1201 Genève": {
     "lat": 46.2112644,
     "lon": 6.1406284,
@@ -628,8 +607,6 @@
     "precision": "exacte",
     "matched": "2, Boulevard Carl-Vogt, Jonction, La Queue-d'Arve, Genève, 1205, Schweiz/Suisse/Svizzera/Svizra"
   },
-  "Avenue Cardinal-Mermillod 36, 1227 Carouge (4e étage)": null,
-  "Avenue de la Praille 22, 1224 Chêne-Bougeries": null,
   "Boulevard de Saint-Georges 72, 1205 Genève": {
     "lat": 46.2012872,
     "lon": 6.1391671,
@@ -745,7 +722,6 @@
     "precision": "rue",
     "matched": "Chemin du Châtelet, La Roseraie, Plainpalais, Genève, 1206, Schweiz/Suisse/Svizzera/Svizra"
   },
-  "Route de Malagnou 2, 1227 Carouge": null,
   "Rue de la Rôtisserie 8, 1204 Genève": {
     "lat": 46.2027511,
     "lon": 6.1459303,
@@ -758,18 +734,12 @@
     "precision": "exacte",
     "matched": "Harpyland, 98, Rue de Carouge, La Roseraie, Plainpalais, Genève, 1205, Schweiz/Suisse/Svizzera/Svizra"
   },
-  "Chemin de Beau-Soleil 20, 1206 Genève (1er étage, secteur Maternité)": null,
-  "Genève (consultations à domicile et en ligne)": null,
   "9 Chemin du Nant-de-Cuard, 1213 Onex": {
     "lat": 46.1873354,
     "lon": 6.1071542,
     "precision": "exacte",
     "matched": "9, Chemin du Nant-de-Cuard, Onex, Genève, 1213, Schweiz/Suisse/Svizzera/Svizra"
   },
-  "Au pied des immeubles, divers quartiers de Vernier": null,
-  "Rue des Boudines 2, 1217 Meyrin (adresse administrative)": null,
-  "Meyrin (via service petite enfance, Rue des Boudines 2)": null,
-  "Plan-les-Ouates (adresse à confirmer)": null,
   "01210 Ferney-Voltaire": {
     "lat": 46.2567057,
     "lon": 6.1096409,
@@ -794,7 +764,6 @@
     "precision": "exacte",
     "matched": "Prévessin-Moëns, Prévessin, Gex, Ain, Auvergne-Rhône-Alpes, France métropolitaine, 01280, France"
   },
-  "Esplanade du Lac, 181 avenue de la Plage, 01220 Divonne-les-Bains": null,
   "01630 Saint-Genis-Pouilly": {
     "lat": 46.243244,
     "lon": 6.0207779,
@@ -837,7 +806,6 @@
     "precision": "rue",
     "matched": "Rue du Champ de Foire, Saint-Jean-de-Gonville, Gex, Ain, Auvergne-Rhône-Alpes, France métropolitaine, 01630, France"
   },
-  "236 Les Passereaux, 01220 Sauverny": null,
   "18 route de Thoiry, 01630 Sergy": {
     "lat": 46.2509769,
     "lon": 5.997494,
@@ -904,8 +872,6 @@
     "precision": "rue",
     "matched": "Route de Pougny, Logras, Péron, Gex, Ain, Auvergne-Rhône-Alpes, France métropolitaine, 01630, France"
   },
-  "Fort l'Écluse, Pays de Gex": null,
-  "Jardin du château, 01210 Ferney-Voltaire": null,
   "34 rue du Mont-Blanc, 01630 Saint-Genis-Pouilly": {
     "lat": 46.2549495,
     "lon": 6.0277533,
@@ -929,5 +895,113 @@
     "lon": 6.0691189,
     "precision": "exacte",
     "matched": "Cessy, Gex, Ain, Auvergne-Rhône-Alpes, France métropolitaine, 01170, France"
+  },
+  "Parcs et préaux, Genève": null,
+  "Cité Léopard, Rue des Horlogers 13, 1227 Carouge": {
+    "lat": 46.1833055,
+    "lon": 6.1440593,
+    "precision": "exacte",
+    "matched": "13, Rue des Horlogers, Pinchat, La Praille, Carouge, Genève, 1227, Schweiz/Suisse/Svizzera/Svizra",
+    "variant": "Rue des Horlogers 13, 1227 Carouge"
+  },
+  "Rue de Loëx 99, 1232 Confignon": null,
+  "Veyrier (adresse exacte à confirmer sur leur site)": null,
+  "Chem. de Riantbosson 11, 1217 Meyrin": null,
+  "Salles de gym du Cycle d'Orientation des Voirets, Genève": null,
+  "Avenue de Rosemont 14, 1208 Genève": null,
+  "Séances itinérantes à Genève (souvent au Cinéma Nord-Sud ou au Cinéma Bio)": null,
+  "Rue du Nant-d'Avril 148, 1217 Meyrin": null,
+  "Parc La Grange, 1207 Genève": null,
+  "Parc Beaulieu, 1202 Genève": null,
+  "Parc Mon-Repos, 1202 Genève": null,
+  "Parc de Bourgogne, 1203 Genève": null,
+  "Parc Promeneur solitaire, 1203 Genève": null,
+  "Avenue de la Paix / Avenue Giuseppe-Motta, 1202 Genève (entrée principale : Pestalozzi 46)": null,
+  "Avenue des Grandes-Communes 68, 1212 Grand-Lancy": null,
+  "Route du Saint-Georges 86, 1213 Petit-Lancy": null,
+  "Passerelle du Pont des Bergues, 1204 Genève": null,
+  "Aula du collège de Saussure, Vieux-Chemin-d'Onex 9, 1213 Petit-Lancy": {
+    "lat": 46.1848549,
+    "lon": 6.1142525,
+    "precision": "exacte",
+    "matched": "Collège de Saussure, 9, Vieux Chemin d'Onex, Petit-Lancy, Lancy, Genève, 1213, Schweiz/Suisse/Svizzera/Svizra",
+    "variant": "Vieux-Chemin-d'Onex 9, 1213 Petit-Lancy"
+  },
+  "Au pied des immeubles, divers quartiers de Vernier": null,
+  "Rue des Boudines 2, 1217 Meyrin (adresse administrative)": null,
+  "Meyrin (via service petite enfance, Rue des Boudines 2)": null,
+  "Plan-les-Ouates (adresse à confirmer)": null,
+  "Chem. des Grangettes 7/Bâtiment G, 1224 Chêne-Bougeries": null,
+  "Rue de Montchoisy 50, 1207 Genève (1er étage)": null,
+  "Avenue Cardinal-Mermillod 36, 1227 Carouge (4e étage)": null,
+  "Avenue de la Praille 22, 1224 Chêne-Bougeries": null,
+  "Route de Malagnou 2, 1227 Carouge": null,
+  "Chemin de Beau-Soleil 20, 1206 Genève (1er étage, secteur Maternité)": null,
+  "Genève (consultations à domicile et en ligne)": null,
+  "Esplanade du Lac, 181 avenue de la Plage, 01220 Divonne-les-Bains": {
+    "lat": 46.3561825,
+    "lon": 6.1458433,
+    "precision": "rue",
+    "matched": "Avenue de la Plage, Petite Champagne, Plan, Vésenex, Divonne-les-Bains, Gex, Ain, Auvergne-Rhône-Alpes, France métropolitaine, 01220, France",
+    "variant": "181 avenue de la Plage, 01220 Divonne-les-Bains"
+  },
+  "236 Les Passereaux, 01220 Sauverny": null,
+  "Fort l'Écluse, Pays de Gex": null,
+  "Jardin du château, 01210 Ferney-Voltaire": null,
+  "Parc de la Mairie, Rue du Village 9, 1214 Vernier": {
+    "lat": 46.2151101,
+    "lon": 6.0848147,
+    "precision": "exacte",
+    "matched": "Mairie, 9, Rue du Village, Vernier, Genève, 1214, Schweiz/Suisse/Svizzera/Svizra",
+    "variant": "Rue du Village 9, 1214 Vernier"
+  },
+  "Quartier des Auréa, Route de Veyrier 46-58, 1227 Carouge": {
+    "lat": 46.1848622,
+    "lon": 6.1485835,
+    "precision": "rue",
+    "matched": "Route de Veyrier, Val d'Arve, Pinchat, La Praille, Carouge, Genève, 1227, Schweiz/Suisse/Svizzera/Svizra",
+    "variant": "Route de Veyrier 46-58, 1227 Carouge"
+  },
+  "Parc Gustave et Léonard Hentsch, Avenue de Châtelaine 28, 1203 Genève": {
+    "lat": 46.2100425,
+    "lon": 6.1188527,
+    "precision": "exacte",
+    "matched": "28, Avenue de Châtelaine, Les Charmilles, Les Ouches, Saint-Jean et Charmilles, Genève, 1203, Schweiz/Suisse/Svizzera/Svizra",
+    "variant": "Avenue de Châtelaine 28, 1203 Genève"
+  },
+  "Parc François-Auguste-Châtrier, Chemin du Bois-des-Arts 58, 1226 Thônex": {
+    "lat": 46.1883122,
+    "lon": 6.1981545,
+    "precision": "exacte",
+    "matched": "Mairie de Thônex, 58, Chemin du Bois-Des-Arts, Moillesulaz, Fossard, Thônex, Genève, 1226, Schweiz/Suisse/Svizzera/Svizra",
+    "variant": "Chemin du Bois-des-Arts 58, 1226 Thônex"
+  },
+  "Préau de l'école des Tattes, Rue du Comte-Géraud 26, 1213 Onex": {
+    "lat": 46.1923352,
+    "lon": 6.1013176,
+    "precision": "exacte",
+    "matched": "Ecole des Tattes, 26, Rue du Comte-Géraud, Onex, Genève, 1213, Schweiz/Suisse/Svizzera/Svizra",
+    "variant": "Rue du Comte-Géraud 26, 1213 Onex"
+  },
+  "Parc des Micocouliers, Avenue de Mategnin, 1217 Meyrin": {
+    "lat": 46.2356968,
+    "lon": 6.0853427,
+    "precision": "rue",
+    "matched": "Avenue de Mategnin, Mategnin, Meyrin, Genève, 1217, Schweiz/Suisse/Svizzera/Svizra",
+    "variant": "Avenue de Mategnin, 1217 Meyrin"
+  },
+  "Parc Eglantyne Jebb, Rue des Epinettes, 1227 Genève": {
+    "lat": 46.190126,
+    "lon": 6.1358168,
+    "precision": "rue",
+    "matched": "Rue des Epinettes, Les Vernets, Les Acacias, Genève, 1227, Schweiz/Suisse/Svizzera/Svizra",
+    "variant": "Rue des Epinettes, 1227 Genève"
+  },
+  "Parc Navazza-Oltramare, Chemin de la Colline 2, 1212 Lancy": {
+    "lat": 46.1837696,
+    "lon": 6.1161346,
+    "precision": "exacte",
+    "matched": "2, Chemin de la Colline, Petit-Lancy, Lancy, Genève, 1212, Schweiz/Suisse/Svizzera/Svizra",
+    "variant": "Chemin de la Colline 2, 1212 Lancy"
   }
 }

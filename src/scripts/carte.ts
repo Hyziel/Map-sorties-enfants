@@ -44,6 +44,7 @@ interface Lieu {
   tags: string[];
   telephone: string;
   horaires: string;
+  periode: { debut: string; fin: string; statut: 'encours' | 'avenir' | 'termine' } | null;
   site: string;
   accessibilite: string;
   remarque: string;
@@ -213,9 +214,40 @@ function itineraire(l: Lieu): string {
       )}`;
 }
 
+const jour = new Intl.DateTimeFormat('fr-CH', { day: 'numeric', month: 'long' });
+
+/**
+ * Badge de période pour les événements datés : « En ce moment, jusqu'au 26
+ * juillet » ou « Du 5 au 9 août ». Rien pour les lieux permanents.
+ */
+function badgePeriode(l: Lieu): string {
+  if (!l.periode) return '';
+  const { debut, fin, statut } = l.periode;
+  const dDate = debut ? new Date(`${debut}T12:00:00`) : null;
+  const fDate = fin ? new Date(`${fin}T12:00:00`) : null;
+  const d = dDate ? jour.format(dDate) : '';
+  const f = fDate ? jour.format(fDate) : '';
+
+  // « Du 9 au 13 septembre » plutôt que « Du 9 septembre au 13 septembre ».
+  const memeMois = dDate && fDate && dDate.getMonth() === fDate.getMonth();
+  const plage = memeMois ? `Du ${dDate.getDate()} au ${f}` : `Du ${d} au ${f}`;
+
+  const texte =
+    statut === 'encours'
+      ? f
+        ? `En ce moment, jusqu'au ${f}`
+        : 'En ce moment'
+      : d && f
+        ? plage
+        : `À partir du ${d}`;
+
+  return `<span class="badge periode ${statut}">${echappe(texte)}</span>`;
+}
+
 /** Les badges communs aux deux cartes (liste et bulle). */
 function badges(l: Lieu): string {
   return [
+    badgePeriode(l),
     l.ageBrut && `<span class="badge">${echappe(l.ageBrut)} ans</span>`,
     l.prix && `<span class="badge ${l.prix}">${echappe(libellePrix(l))}</span>`,
     l.lieu && `<span class="badge">${echappe(libelleLieu(l))}</span>`,
@@ -396,6 +428,7 @@ function ouvrirFiche(l: Lieu): void {
     <h2 id="fiche-titre">${echappe(l.nom)}</h2>
     ${alertes}
     <p class="badges">
+      ${badgePeriode(l)}
       ${l.ageBrut ? `<span class="badge">${echappe(l.ageBrut)} ans</span>` : ''}
       ${l.prix ? `<span class="badge ${l.prix}">${echappe(libellePrix(l))}</span>` : ''}
       ${l.lieu ? `<span class="badge">${echappe(libelleLieu(l))}</span>` : ''}
@@ -553,6 +586,39 @@ $('fermer-fiche').addEventListener('click', () => selectionner(null, 'liste'));
 document.addEventListener('keydown', (e) => {
   if (e.key === 'Escape' && !elFiche.hidden) selectionner(null, 'liste');
 });
+
+/* --- Défilement de la rangée de catégories --- */
+
+// Les catégories ne tiennent pas toutes dans la largeur : deux flèches
+// apparaissent quand il reste quelque chose à voir d'un côté ou de l'autre.
+{
+  const rangee = $<HTMLElement>('ligne-cat');
+  const gauche = $<HTMLButtonElement>('cat-gauche');
+  const droite = $<HTMLButtonElement>('cat-droite');
+
+  const majFleches = () => {
+    const debord = rangee.scrollWidth - rangee.clientWidth;
+    // 2 px de marge : les navigateurs arrondissent scrollLeft au sous-pixel.
+    gauche.hidden = rangee.scrollLeft <= 2;
+    droite.hidden = rangee.scrollLeft >= debord - 2;
+  };
+
+  const defiler = (sens: 1 | -1) => {
+    rangee.scrollBy({ left: sens * rangee.clientWidth * 0.8 });
+  };
+
+  droite.addEventListener('click', () => defiler(1));
+  gauche.addEventListener('click', () => defiler(-1));
+  rangee.addEventListener('scroll', majFleches, { passive: true });
+  new ResizeObserver(majFleches).observe(rangee);
+
+  // Une puce atteinte au clavier doit rester visible sous les flèches.
+  rangee.addEventListener('focusin', (e) => {
+    (e.target as HTMLElement).scrollIntoView({ block: 'nearest', inline: 'nearest' });
+  });
+
+  majFleches();
+}
 
 // Bascule liste/carte sur mobile.
 for (const onglet of document.querySelectorAll<HTMLButtonElement>('.bascule button')) {
