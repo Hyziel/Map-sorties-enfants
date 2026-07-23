@@ -11,7 +11,8 @@
     "preview": "astro preview",
     "check": "astro check",
     "parcs": "node scripts/parcs-osm.mjs",
-    "horaires": "node scripts/horaires-osm.mjs"
+    "horaires": "node scripts/horaires-osm.mjs",
+    "tags": "node scripts/tags-auto.mjs"
   },
   "dependencies": {
     "@fontsource-variable/nunito": "^5.1.1",

@@ -3,15 +3,21 @@ import '@fontsource-variable/nunito';
 import '../styles/global.css';
 import '../styles/composants.css';
 import { EDITEUR, ANNEE, SITE } from '../consts';
+import Entete from '../components/Entete.astro';
 
 interface Props {
   titre: string;
   description: string;
   /** Données structurées schema.org à injecter dans le <head>. */
   schema?: unknown;
+  /** Compteurs affichés dans l'entête, sur la carte seulement. */
+  sorties?: number;
+  services?: number;
+  /** Entête resserré, quand la page doit tenir dans la fenêtre. */
+  enteteCompacte?: boolean;
 }
 
-const { titre, description, schema } = Astro.props;
+const { titre, description, schema, sorties, services, enteteCompacte } = Astro.props;
 const canonical = new URL(Astro.url.pathname, Astro.site);
 
 const schemaSite = {
@@ -60,6 +66,8 @@ const schemaSite = {
     />
   </head>
   <body>
+    <Entete sorties={sorties} services={services} compact={enteteCompacte} />
+
     <slot />
 
     <footer class="pied-site">
@@ -68,11 +76,6 @@ const schemaSite = {
         <a href="/mentions-legales/">Mentions légales et contact</a>
       </p>
     </footer>
-
-    <button type="button" id="bascule-theme" class="bascule-theme" aria-pressed="false">
-      <span class="icone" aria-hidden="true"></span>
-      <span class="sr-only">Basculer entre le thème clair et sombre</span>
-    </button>
 
     <script>
       import '../scripts/theme';

@@ -1,103 +1,112 @@
-/* Palette pastel.
-   Principe : les couleurs restent claires et poudrées, le texte reste sombre.
-   On ne pose jamais de blanc sur un pastel, le contraste ne suivrait pas.
-   Les aplats colorés portent donc toujours l'encre foncée. */
+/* Charte orange et anthracite.
+   L'orange #f3752b ne porte que du blanc, en aplat plein ou en liseré. Pour du
+   texte orange sur fond clair on emploie #b8501b, seul à tenir le contraste AA.
+   Aplats pleins uniquement : ni dégradé, ni ombre portée. */
 
 :root {
-  --accent: #f4c0d1; /* rose pastel soutenu, aplats et surbrillances */
-  --accent-doux: #fbeaf0; /* rose très clair, fonds discrets */
-  --accent-fort: #993556; /* version lisible en texte sur fond clair */
+  --orange: #f3752b; /* liserés, aplats sans texte */
+  --orange-sombre: #9d4416; /* survol des aplats */
+  --orange-texte: #b8501b; /* orange lisible en texte sur fond clair */
 
-  --entete-fond: #fbeaf0;
-  --entete-bord: #f4c0d1;
-  --entete-texte: #4b1528;
-  --entete-accent: #993556;
+  /* Blanc sur #f3752b ne donne que 2.84:1, très en dessous du seuil AA. Les
+     aplats orange qui portent du texte emploient donc l'orange foncé, qui
+     atteint 5.2:1 tout en restant la même famille de couleur. */
+  --orange-plein: #b8501b;
 
-  --encre: #3b332e;
-  --encre-doux: #7b7169;
-  --fond: #fdf9f5;
+  /* Alias conservés pour ne pas réécrire toutes les feuilles existantes. */
+  --accent: var(--orange);
+  --accent-doux: #fdede3;
+  --accent-fort: var(--orange-texte);
+
+  --encre: #2c2c2a; /* titres et texte principal */
+  --encre-doux: #5f5e5a; /* texte secondaire, compteurs */
+  --encre-tierce: #444441; /* troisième ton, badges */
+
+  --fond: #fafaf7;
   --carte: #ffffff;
-  --bord: #ece3da;
-  --bord-fort: #dcd0c4;
-  --surlignage: #fdeceb;
+  --bord: #e6e4de;
+  --bord-fort: #cfccc4;
+  --surlignage: #fdede3;
 
-  --alerte-fond: #fdeae6;
-  --alerte-bord: #f3bcae;
-  --alerte-texte: #9c4630;
+  --entete-fond: #ffffff;
+  --entete-texte: var(--encre);
+  --entete-doux: var(--encre-doux);
+  --entete-accent: var(--orange-texte);
+
+  --alerte-fond: #fdece5;
+  --alerte-bord: #f0b394;
+  --alerte-texte: #93370f;
   --info-fond: #eaf1f8;
   --info-bord: #bcd3ea;
-  --info-texte: #34597f;
+  --info-texte: #2f5478;
 
-  --rayon: 16px;
-  --rayon-s: 11px;
-  --ombre: 0 1px 2px rgb(90 70 60 / 0.05), 0 4px 16px rgb(90 70 60 / 0.07);
-  --ombre-forte: 0 8px 34px rgb(90 70 60 / 0.18);
+  --rayon: 12px;
+  --rayon-s: 8px;
+
+  /* Charte sans ombre portée : la séparation passe par les bordures. */
+  --ombre: none;
+  --ombre-forte: none;
 }
 
-/* Le thème suit le système par défaut. Le bouton de la barre pose
+/* Le thème suit le système par défaut. Le bouton de l'entête pose
    data-theme="clair" ou "sombre" sur <html>, qui l'emporte dans les deux sens.
    Les deux blocs ci-dessous partagent la même liste de variables. */
 
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme='clair']) {
-    /* En sombre les pastels sont assombris et le texte redevient clair. */
-    --accent: #d98ca6;
-    --accent-doux: #3a2029;
-    --accent-fort: #f0aec4;
+    /* Même orange qu'en clair : il reste lisible sur fond anthracite. */
+    --orange-sombre: #d55f19;
+    --orange-texte: #ff9155;
+    --orange-plein: #b8501b;
 
-    --entete-fond: #2b1a21;
-    --entete-bord: #4a2b37;
-    --entete-texte: #f6e4ea;
-    --entete-accent: #f0aec4;
+    --accent-doux: #3a2418;
 
-    --encre: #f0e9e3;
-    --encre-doux: #a89e95;
-    --fond: #1c1a18;
-    --carte: #262322;
-    --bord: #3a3532;
-    --bord-fort: #4d4640;
-    --surlignage: #3a2a27;
+    --encre: #f2f1ed;
+    --encre-doux: #a8a69f;
+    --encre-tierce: #c9c7c0;
 
-    --alerte-fond: #3d221c;
-    --alerte-bord: #7d4335;
-    --alerte-texte: #f5b8a6;
+    --fond: #1a1a19;
+    --carte: #232321;
+    --bord: #35342f;
+    --bord-fort: #4a4842;
+    --surlignage: #3a2418;
+
+    --entete-fond: #232321;
+
+    --alerte-fond: #3d2115;
+    --alerte-bord: #7d4526;
+    --alerte-texte: #f7b795;
     --info-fond: #1e2b3a;
     --info-bord: #37536f;
     --info-texte: #aecbe9;
-
-    --ombre: 0 1px 2px rgb(0 0 0 / 0.4), 0 4px 16px rgb(0 0 0 / 0.32);
-    --ombre-forte: 0 8px 34px rgb(0 0 0 / 0.5);
   }
 }
 
-/* Sombre demandé explicitement, quel que soit le réglage du système. */
 :root[data-theme='sombre'] {
-  --accent: #d98ca6;
-  --accent-doux: #3a2029;
-  --accent-fort: #f0aec4;
+  --orange-sombre: #d55f19;
+  --orange-texte: #ff9155;
+  --orange-plein: #b8501b;
 
-  --entete-fond: #2b1a21;
-  --entete-bord: #4a2b37;
-  --entete-texte: #f6e4ea;
-  --entete-accent: #f0aec4;
+  --accent-doux: #3a2418;
 
-  --encre: #f0e9e3;
-  --encre-doux: #a89e95;
-  --fond: #1c1a18;
-  --carte: #262322;
-  --bord: #3a3532;
-  --bord-fort: #4d4640;
-  --surlignage: #3a2a27;
+  --encre: #f2f1ed;
+  --encre-doux: #a8a69f;
+  --encre-tierce: #c9c7c0;
 
-  --alerte-fond: #3d221c;
-  --alerte-bord: #7d4335;
-  --alerte-texte: #f5b8a6;
+  --fond: #1a1a19;
+  --carte: #232321;
+  --bord: #35342f;
+  --bord-fort: #4a4842;
+  --surlignage: #3a2418;
+
+  --entete-fond: #232321;
+
+  --alerte-fond: #3d2115;
+  --alerte-bord: #7d4526;
+  --alerte-texte: #f7b795;
   --info-fond: #1e2b3a;
   --info-bord: #37536f;
   --info-texte: #aecbe9;
-
-  --ombre: 0 1px 2px rgb(0 0 0 / 0.4), 0 4px 16px rgb(0 0 0 / 0.32);
-  --ombre-forte: 0 8px 34px rgb(0 0 0 / 0.5);
 }
 
 * {
@@ -119,17 +128,19 @@ body {
 
 button,
 input,
-select {
+select,
+textarea {
   font: inherit;
   color: inherit;
 }
 
 a {
-  color: var(--accent-fort);
+  color: var(--orange-texte);
 }
 
+/* Contour visible au clavier sur tout élément interactif. */
 :focus-visible {
-  outline: 3px solid var(--accent-fort);
+  outline: 3px solid var(--orange);
   outline-offset: 2px;
   border-radius: 4px;
 }

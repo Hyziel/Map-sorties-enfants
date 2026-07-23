@@ -1,0 +1,159 @@
+---
+/**
+ * Entête partagé par toutes les pages. Il porte le titre, la baseline, et à
+ * droite les deux actions : « À propos » et la bascule clair/sombre.
+ *
+ * Le compteur n'apparaît que sur la carte, seule page où il a un sens.
+ */
+interface Props {
+  sorties?: number;
+  services?: number;
+  /** Sur la carte, l'entête ne doit pas défiler avec la page. */
+  compact?: boolean;
+}
+
+const { sorties, services, compact = false } = Astro.props;
+---
+
+<header class:list={['entete', { compact }]}>
+  <div class="bloc-titre">
+    <h1>Sorties enfants <span class="ge">Genève</span></h1>
+    <p class="baseline">
+      La carte des sorties, activités et bons plans pour les familles à Genève
+    </p>
+    {
+      sorties !== undefined && (
+        <p class="compte">
+          {sorties} sorties · {services} services
+        </p>
+      )
+    }
+  </div>
+
+  <nav class="actions" aria-label="Navigation principale">
+    <a class="lien-apropos" href="/a-propos/">À propos</a>
+    <button type="button" id="bascule-theme" class="bascule-theme" aria-pressed="false">
+      <span class="icone" aria-hidden="true"></span>
+      <span class="sr-only">Basculer entre le thème clair et sombre</span>
+    </button>
+  </nav>
+</header>
+
+<style>
+  .entete {
+    flex: 0 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem 1.5rem;
+    flex-wrap: wrap;
+    padding: 1.75rem clamp(1rem, 4vw, 2rem);
+    background: var(--entete-fond);
+    color: var(--entete-texte);
+    /* Liseré orange : la séparation nette voulue avec le contenu. */
+    border-bottom: 3px solid var(--orange);
+  }
+
+  /* Sur la carte, la page tient dans la fenêtre : on resserre un peu. */
+  .entete.compact {
+    padding: 1.25rem clamp(1rem, 4vw, 2rem);
+  }
+
+  .bloc-titre {
+    min-width: 0;
+  }
+
+  h1 {
+    margin: 0;
+    font-size: 1.95rem;
+    font-weight: 600;
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    color: var(--entete-texte);
+  }
+
+  .ge {
+    color: var(--entete-accent);
+  }
+
+  .baseline {
+    margin: 0.35rem 0 0;
+    font-size: 0.98rem;
+    line-height: 1.4;
+    color: var(--entete-doux);
+    max-width: 46ch;
+  }
+
+  .compte {
+    margin: 0.3rem 0 0;
+    font-size: 0.82rem;
+    color: var(--entete-doux);
+  }
+
+  .actions {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    flex: 0 0 auto;
+  }
+
+  .lien-apropos {
+    padding: 0.45rem 0.9rem;
+    border: 1px solid var(--bord-fort);
+    border-radius: var(--rayon-s);
+    color: var(--entete-accent);
+    font-size: 0.92rem;
+    font-weight: 600;
+    text-decoration: none;
+  }
+
+  .lien-apropos:hover {
+    border-color: var(--orange);
+    background: var(--accent-doux);
+  }
+
+  .bascule-theme {
+    display: grid;
+    place-items: center;
+    width: 2.4rem;
+    height: 2.4rem;
+    padding: 0;
+    border: 1px solid var(--bord-fort);
+    border-radius: var(--rayon-s);
+    background: var(--carte);
+    font-size: 1.05rem;
+    line-height: 1;
+    cursor: pointer;
+  }
+
+  .bascule-theme:hover {
+    border-color: var(--orange);
+    background: var(--accent-doux);
+  }
+
+  @media (max-width: 720px) {
+    .entete,
+    .entete.compact {
+      padding: 1rem clamp(0.75rem, 3vw, 1.25rem);
+      align-items: flex-start;
+    }
+
+    h1 {
+      font-size: 1.4rem;
+    }
+
+    .baseline {
+      font-size: 0.9rem;
+    }
+
+    /* Les actions passent en haut à droite, toujours atteignables. */
+    .actions {
+      order: -1;
+      margin-left: auto;
+    }
+
+    .bloc-titre {
+      flex: 1 1 100%;
+    }
+  }
+</style>

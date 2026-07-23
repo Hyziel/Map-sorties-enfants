@@ -64,16 +64,11 @@ const TRANCHES = [
 <Base
   titre="Sorties enfants à Genève, la carte des idées"
   schema={schema}
+  sorties={stats.sorties}
+  services={stats.services}
+  enteteCompacte
   description={`Carte de ${stats.sorties} sorties et activités pour enfants à Genève et dans le canton : parcs, pataugeoires, musées, ludothèques, ateliers. Filtres par âge, prix et météo.`}
 >
-  <header class="entete">
-    <h1><span aria-hidden="true">🎠</span> Sorties enfants <span class="ge">Genève</span></h1>
-    <p class="compte">
-      {stats.sorties} sorties · {stats.services} services
-    </p>
-    <a class="lien-apropos" href="/a-propos/">À propos</a>
-  </header>
-
   <form class="filtres" id="filtres" role="search" aria-label="Filtrer les sorties">
     <div class="ligne-1">
       <div class="champ-recherche">
@@ -206,42 +201,6 @@ const TRANCHES = [
     overflow: hidden;
   }
 
-  .entete {
-    flex: 0 0 auto;
-    display: flex;
-    align-items: baseline;
-    gap: 0.75rem;
-    flex-wrap: wrap;
-    padding: 0.7rem clamp(0.75rem, 3vw, 1.5rem);
-    background: var(--entete-fond);
-    color: var(--entete-texte);
-    border-bottom: 1px solid var(--entete-bord);
-  }
-
-  h1 {
-    margin: 0;
-    font-size: clamp(1.05rem, 3.4vw, 1.35rem);
-    font-weight: 800;
-    letter-spacing: -0.015em;
-  }
-
-  .ge {
-    color: var(--entete-accent);
-  }
-
-  .compte {
-    margin: 0;
-    font-size: 0.85rem;
-    color: var(--entete-accent);
-  }
-
-  .lien-apropos {
-    margin-left: auto;
-    font-size: 0.82rem;
-    color: var(--entete-accent);
-    font-weight: 700;
-  }
-
   /* --- Filtres --- */
 
   .filtres {
@@ -324,13 +283,13 @@ const TRANCHES = [
   }
 
   .saison:hover {
-    border-color: #e0a15f;
+    border-color: var(--orange);
   }
 
   .saison[aria-pressed='true'] {
-    background: #f2a65a;
-    border-color: #cf8438;
-    color: #3b241f;
+    background: var(--orange-plein);
+    border-color: var(--orange-plein);
+    color: #fff;
   }
 
   .reinit {
@@ -450,45 +409,58 @@ const TRANCHES = [
     border-color: var(--puce);
   }
 
-  /* Chaque famille de catégories a sa teinte pastel, posée en aplat au repos
-     et renforcée à la sélection. Le texte reste sombre : jamais de blanc. */
+  /* Aplats pleins saturés, texte blanc. Les couleurs sont posées ici plutôt
+     que dans les données : la teinte est un choix graphique, et cela évite de
+     toucher aux scripts de build. */
   .puce {
-    background: var(--puce-fond);
-    border-color: color-mix(in srgb, var(--puce-texte) 18%, transparent);
-    color: var(--puce-texte);
+    background: var(--cat, var(--encre-tierce));
+    border-color: transparent;
+    color: #fff;
+    font-weight: 500;
+  }
+
+  .puce[data-cat='parcs'],
+  .puce[data-cat='nature'],
+  .puce[data-cat='grillades'] {
+    --cat: #1d7a4c;
+  }
+
+  .puce[data-cat='eau'],
+  .puce[data-cat='piscines'] {
+    --cat: #0f6e56;
+  }
+
+  .puce[data-cat='sport'],
+  .puce[data-cat='couvert'] {
+    --cat: #1f6f8b;
+  }
+
+  .puce[data-cat='musees'],
+  .puce[data-cat='spectacles'],
+  .puce[data-cat='cinema'],
+  .puce[data-cat='biblio'] {
+    --cat: #6b4794;
+  }
+
+  .puce[data-cat='animaux'],
+  .puce[data-cat='ateliers'],
+  .puce[data-cat='parents'] {
+    --cat: #b8501b;
+  }
+
+  .puce[data-cat='cafes'],
+  .puce[data-cat='evenement'] {
+    --cat: var(--encre-tierce);
+  }
+
+  .puce:hover {
+    background: color-mix(in srgb, var(--cat, var(--encre-tierce)) 84%, #000);
   }
 
   .puce[aria-pressed='true'] {
-    background: var(--puce);
-    border-color: color-mix(in srgb, var(--puce-texte) 45%, transparent);
-    color: var(--puce-texte);
-    box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--puce-texte) 25%, transparent);
-  }
-
-  @media (prefers-color-scheme: dark) {
-    :global(:root:not([data-theme='clair'])) .puce {
-      background: var(--puce-fond-sombre);
-      border-color: color-mix(in srgb, var(--puce-texte-sombre) 22%, transparent);
-      color: var(--puce-texte-sombre);
-    }
-
-    :global(:root:not([data-theme='clair'])) .puce[aria-pressed='true'] {
-      /* Le pastel saturé reste clair : il porte l'encre foncée, comme en
-         thème clair. Un mélange avec le fond sombre tombait à 1.2 de contraste. */
-      background: var(--puce);
-      color: #241a16;
-    }
-  }
-
-  :global(:root[data-theme='sombre']) .puce {
-    background: var(--puce-fond-sombre);
-    border-color: color-mix(in srgb, var(--puce-texte-sombre) 22%, transparent);
-    color: var(--puce-texte-sombre);
-  }
-
-  :global(:root[data-theme='sombre']) .puce[aria-pressed='true'] {
-    background: var(--puce);
-    color: #241a16;
+    background: var(--orange-plein);
+    border-color: var(--orange-plein);
+    color: #fff;
   }
 
   /* --- Bascule liste/carte (mobile) --- */

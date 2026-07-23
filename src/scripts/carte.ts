@@ -371,6 +371,7 @@ function rendre(): void {
   // --- Carte ---
   groupe.clearLayers();
   marqueurs.clear();
+  marqueurAccentue = null; // les marqueurs sont recréés : le suivi repart de zéro
 
   for (const l of avecGps) {
     const m = L.marker([l.lat!, l.lon!], {
@@ -387,7 +388,13 @@ function rendre(): void {
       autoPanPadding: [24, 24],
       offset: [0, -6],
     });
-    m.on('click', () => surligner(l.id, 'carte'));
+    m.on('click', () => {
+      surligner(l.id, 'carte');
+      // Si la fiche détaillée est ouverte, elle suit le lieu qu'on vient de
+      // choisir plutôt que de rester sur le précédent. La vue de la carte,
+      // elle, ne bouge pas : on reste où l'utilisateur avait zoomé.
+      if (!elFiche.hidden) ouvrirFiche(l);
+    });
     marqueurs.set(l.id, m);
     groupe.addLayer(m);
   }
@@ -421,14 +428,29 @@ function filtresActifs(): boolean {
 /* Sélection et fiche détaillée                                        */
 /* ------------------------------------------------------------------ */
 
+/** Index par identifiant, pour éviter une recherche linéaire par marqueur. */
+const parId = new Map(donnees.lieux.map((l) => [l.id, l]));
+
+/** Dernier marqueur mis en avant, pour ne rendre que ce qui change. */
+let marqueurAccentue: string | null = null;
+
 function majSelection(): void {
   for (const b of elListe.querySelectorAll<HTMLButtonElement>('.fiche-carte')) {
     b.setAttribute('aria-pressed', String(b.dataset.id === etat.selection));
   }
-  for (const [id, m] of marqueurs) {
-    const l = donnees.lieux.find((x) => x.id === id)!;
-    m.setIcon(icone(l, id === etat.selection));
+
+  // On ne retouche que les deux marqueurs concernés. Réappliquer une icône à
+  // tous les marqueurs à chaque clic faisait remanier le calque entier, ce qui
+  // était lent et pouvait perturber la vue.
+  if (marqueurAccentue === etat.selection) return;
+
+  for (const id of [marqueurAccentue, etat.selection]) {
+    if (!id) continue;
+    const m = marqueurs.get(id);
+    const l = parId.get(id);
+    if (m && l) m.setIcon(icone(l, id === etat.selection));
   }
+  marqueurAccentue = etat.selection;
 }
 
 function ligne(icone: string, texte: string, lien?: string): string {
@@ -489,8 +511,11 @@ function ouvrirFiche(l: Lieu): void {
           : ''
     }`;
 
+  // On ne prend le focus qu'à l'ouverture. Le reprendre à chaque changement de
+  // lieu ferait sauter la page pendant qu'on parcourt la carte.
+  const etaitFermee = elFiche.hidden;
   elFiche.hidden = false;
-  elFiche.focus();
+  if (etaitFermee) elFiche.focus();
 }
 
 /**

@@ -23,9 +23,9 @@
 }
 
 .fiche-carte[aria-pressed='true'] {
-  border-color: var(--accent);
+  border-color: var(--orange);
+  border-width: 2px;
   background: var(--surlignage);
-  box-shadow: 0 0 0 1px var(--accent);
 }
 
 .fiche-carte .pastille {
@@ -253,16 +253,16 @@
 .bouton {
   display: inline-block;
   padding: 0.55rem 1.1rem;
-  border-radius: 999px;
-  background: var(--accent);
-  color: #3b241f; /* encre foncée : le blanc ne passerait pas sur ce pastel */
-  font-weight: 800;
+  border-radius: var(--rayon-s);
+  background: var(--orange-plein);
+  color: #fff; /* l'orange ne porte que du blanc */
+  font-weight: 600;
   font-size: 0.9rem;
   text-decoration: none;
 }
 
 .bouton:hover {
-  background: color-mix(in srgb, var(--accent) 82%, #8a4a42);
+  background: var(--orange-sombre);
 }
 
 .precision {
@@ -297,42 +297,6 @@
 .pied-site a {
   color: var(--accent-fort);
   font-weight: 700;
-}
-
-/* Le bouton de thème flotte au-dessus du pied : on le remonte. */
-.pied-site ~ .bascule-theme {
-  bottom: 2.6rem;
-}
-
-/* --- Bouton de bascule clair / sombre --- */
-
-.bascule-theme {
-  position: fixed;
-  right: 0.75rem;
-  bottom: 0.75rem;
-  z-index: 950;
-  display: grid;
-  place-items: center;
-  width: 2.6rem;
-  height: 2.6rem;
-  padding: 0;
-  border: 1px solid var(--bord-fort);
-  border-radius: 50%;
-  background: var(--carte);
-  box-shadow: var(--ombre);
-  font-size: 1.1rem;
-  line-height: 1;
-  cursor: pointer;
-}
-
-.bascule-theme:hover {
-  border-color: var(--accent);
-}
-
-/* Sur la carte, ce coin est déjà pris par le pied de page et, juste
-   au-dessus, les contrôles de zoom Leaflet. Le bouton passe par-dessus. */
-.grille ~ .bascule-theme {
-  bottom: 7.6rem;
 }
 
 /* --- Bulle compacte au clic sur un marqueur --- */
@@ -388,16 +352,16 @@
 .mini-details {
   padding: 0.35rem 0.8rem;
   border: 0;
-  border-radius: 999px;
-  background: var(--accent);
-  color: #3b241f;
-  font-weight: 800;
+  border-radius: var(--rayon-s);
+  background: var(--orange-plein);
+  color: #fff;
+  font-weight: 600;
   font-size: 0.8rem;
   cursor: pointer;
 }
 
 .mini-details:hover {
-  background: color-mix(in srgb, var(--accent) 82%, #8a4a42);
+  background: var(--orange-sombre);
 }
 
 .popup-mini .mini-actions a {
