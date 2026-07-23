@@ -502,14 +502,7 @@ function ouvrirFiche(l: Lieu): void {
     </div>
     <p class="actions">
       <a class="bouton" href="${itineraire}" target="_blank" rel="noopener">Itinéraire</a>
-    </p>
-    ${
-      l.precision === 'approchee'
-        ? '<p class="precision">Position approximative : l\'adresse a été localisée à la rue, pas au numéro.</p>'
-        : l.precision === 'geocodee'
-          ? "<p class=\"precision\">Position déduite de l'adresse, non vérifiée sur place.</p>"
-          : ''
-    }`;
+    </p>`;
 
   // On ne prend le focus qu'à l'ouverture. Le reprendre à chaque changement de
   // lieu ferait sauter la page pendant qu'on parcourt la carte.

@@ -265,14 +265,6 @@
   background: var(--orange-sombre);
 }
 
-.precision {
-  margin-top: 1rem;
-  padding-top: 0.7rem;
-  border-top: 1px solid var(--bord);
-  font-size: 0.76rem;
-  color: var(--encre-doux);
-}
-
 /* --- Pied de page --- */
 
 /* Sur la carte, la page occupe exactement la fenêtre : le pied doit rester
