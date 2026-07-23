@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+
+# La page de confirmation du formulaire n'a pas d'intérêt dans un index.
+Disallow: /merci/
+
+Sitemap: https://sorties-enfants-geneve.netlify.app/sitemap.xml

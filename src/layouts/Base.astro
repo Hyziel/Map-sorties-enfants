@@ -2,14 +2,27 @@
 import '@fontsource-variable/nunito';
 import '../styles/global.css';
 import '../styles/composants.css';
+import { EDITEUR, ANNEE, SITE } from '../consts';
 
 interface Props {
   titre: string;
   description: string;
+  /** Données structurées schema.org à injecter dans le <head>. */
+  schema?: unknown;
 }
 
-const { titre, description } = Astro.props;
+const { titre, description, schema } = Astro.props;
 const canonical = new URL(Astro.url.pathname, Astro.site);
+
+const schemaSite = {
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  name: 'Sorties enfants Genève',
+  url: SITE,
+  inLanguage: 'fr-CH',
+  description,
+  publisher: { '@type': 'Person', name: EDITEUR },
+};
 ---
 
 <!doctype html>
@@ -20,7 +33,7 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
     <title>{titre}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
-    <meta name="theme-color" content="#f6a9a0" />
+    <meta name="theme-color" content="#fbeaf0" />
 
     <meta property="og:type" content="website" />
     <meta property="og:title" content={titre} />
@@ -40,9 +53,21 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
         /* localStorage indisponible (navigation privée) : on suit le système. */
       }
     </script>
+
+    <script
+      type="application/ld+json"
+      set:html={JSON.stringify(schema ? [schemaSite, schema] : schemaSite)}
+    />
   </head>
   <body>
     <slot />
+
+    <footer class="pied-site">
+      <p>
+        © {ANNEE} {EDITEUR}, tous droits réservés.
+        <a href="/mentions-legales/">Mentions légales et contact</a>
+      </p>
+    </footer>
 
     <button type="button" id="bascule-theme" class="bascule-theme" aria-pressed="false">
       <span class="icone" aria-hidden="true"></span>

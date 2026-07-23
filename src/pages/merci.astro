@@ -1,0 +1,37 @@
+---
+import Base from '../layouts/Base.astro';
+---
+
+<Base
+  titre="Message envoyé, Sorties enfants Genève"
+  description="Votre message a bien été transmis."
+>
+  <article class="page">
+    <h1>Merci, c'est envoyé</h1>
+    <p>
+      Nous lisons tout, et nous vous répondrons dès que possible. Si vous nous avez signalé un lieu
+      ou une erreur, il sera pris en compte lors de la prochaine mise à jour de la carte.
+    </p>
+    <p><a class="bouton" href="/">Retour à la carte</a></p>
+  </article>
+</Base>
+
+<style>
+  .page {
+    max-width: 34rem;
+    margin: 0 auto;
+    padding: 4rem clamp(1rem, 5vw, 2rem);
+    line-height: 1.7;
+    text-align: center;
+  }
+
+  h1 {
+    font-size: clamp(1.6rem, 5vw, 2.1rem);
+    margin: 0 0 1rem;
+    letter-spacing: -0.02em;
+  }
+
+  p {
+    margin: 0 0 1.5rem;
+  }
+</style>

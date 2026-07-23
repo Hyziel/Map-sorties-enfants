@@ -4,9 +4,14 @@
    Les aplats colorés portent donc toujours l'encre foncée. */
 
 :root {
-  --accent: #f6a9a0; /* corail poudré, aplats et surbrillances */
-  --accent-doux: #fdeceb; /* teinte très claire, fonds discrets */
-  --accent-fort: #b05f57; /* version lisible en texte sur fond clair */
+  --accent: #f4c0d1; /* rose pastel soutenu, aplats et surbrillances */
+  --accent-doux: #fbeaf0; /* rose très clair, fonds discrets */
+  --accent-fort: #993556; /* version lisible en texte sur fond clair */
+
+  --entete-fond: #fbeaf0;
+  --entete-bord: #f4c0d1;
+  --entete-texte: #4b1528;
+  --entete-accent: #993556;
 
   --encre: #3b332e;
   --encre-doux: #7b7169;
@@ -36,9 +41,14 @@
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme='clair']) {
     /* En sombre les pastels sont assombris et le texte redevient clair. */
-    --accent: #e79c93;
-    --accent-doux: #3a2a27;
-    --accent-fort: #f3b3aa;
+    --accent: #d98ca6;
+    --accent-doux: #3a2029;
+    --accent-fort: #f0aec4;
+
+    --entete-fond: #2b1a21;
+    --entete-bord: #4a2b37;
+    --entete-texte: #f6e4ea;
+    --entete-accent: #f0aec4;
 
     --encre: #f0e9e3;
     --encre-doux: #a89e95;
@@ -62,9 +72,14 @@
 
 /* Sombre demandé explicitement, quel que soit le réglage du système. */
 :root[data-theme='sombre'] {
-  --accent: #e79c93;
-  --accent-doux: #3a2a27;
-  --accent-fort: #f3b3aa;
+  --accent: #d98ca6;
+  --accent-doux: #3a2029;
+  --accent-fort: #f0aec4;
+
+  --entete-fond: #2b1a21;
+  --entete-bord: #4a2b37;
+  --entete-texte: #f6e4ea;
+  --entete-accent: #f0aec4;
 
   --encre: #f0e9e3;
   --encre-doux: #a89e95;

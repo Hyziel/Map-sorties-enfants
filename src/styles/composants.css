@@ -63,8 +63,9 @@
   padding: 0 0.35rem;
   border-radius: 4px;
   background: var(--bord);
-  color: var(--encre-doux);
-  font-size: 0.7rem;
+  /* L'encre douce sur ce gris ne donnait que 3.8:1, sous le seuil AA. */
+  color: var(--encre);
+  font-size: 0.72rem;
 }
 
 /* --- Badges --- */
@@ -272,6 +273,37 @@
   color: var(--encre-doux);
 }
 
+/* --- Pied de page --- */
+
+/* Sur la carte, la page occupe exactement la fenêtre : le pied doit rester
+   une bande fine, sinon il mange la hauteur de la carte. */
+.pied-site {
+  flex: 0 0 auto;
+  padding: 0.45rem clamp(0.75rem, 3vw, 1.5rem);
+  border-top: 1px solid var(--bord);
+  background: var(--carte);
+  font-size: 0.76rem;
+  color: var(--encre-doux);
+}
+
+.pied-site p {
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.15rem 0.6rem;
+  align-items: baseline;
+}
+
+.pied-site a {
+  color: var(--accent-fort);
+  font-weight: 700;
+}
+
+/* Le bouton de thème flotte au-dessus du pied : on le remonte. */
+.pied-site ~ .bascule-theme {
+  bottom: 2.6rem;
+}
+
 /* --- Bouton de bascule clair / sombre --- */
 
 .bascule-theme {
@@ -297,9 +329,10 @@
   border-color: var(--accent);
 }
 
-/* Sur la carte, les contrôles de zoom Leaflet occupent déjà ce coin. */
+/* Sur la carte, ce coin est déjà pris par le pied de page et, juste
+   au-dessus, les contrôles de zoom Leaflet. Le bouton passe par-dessus. */
 .grille ~ .bascule-theme {
-  bottom: 5.5rem;
+  bottom: 7.6rem;
 }
 
 /* --- Bulle compacte au clic sur un marqueur --- */

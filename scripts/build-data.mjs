@@ -23,27 +23,64 @@ const BBOX = { latMin: 46.05, latMax: 46.4, lonMin: 5.85, lonMax: 6.35 };
 /* Catégories                                                          */
 /* ------------------------------------------------------------------ */
 
-// Chaque catégorie canonique : libellé affiché, emoji, couleur du marqueur.
-// Teintes pastel, volontairement claires : l'interface pose toujours du texte
-// sombre par-dessus, jamais du blanc.
-const CATEGORIES = {
-  parcs: { label: 'Parcs & aires de jeux', emoji: '🌳', couleur: '#8fc79b' },
-  eau: { label: "Pataugeoires & jeux d'eau", emoji: '💦', couleur: '#8fcbe8' },
-  piscines: { label: 'Piscines & baignade', emoji: '🏊', couleur: '#6fb8d8' },
-  sport: { label: 'Sport & mouvement', emoji: '🏃', couleur: '#7ec8c2' },
-  evenement: { label: 'Événements de saison', emoji: '⛺', couleur: '#f2a65a' },
-  couvert: { label: 'Jeux couverts', emoji: '🎪', couleur: '#f5a58d' },
-  biblio: { label: 'Bibliothèques & ludothèques', emoji: '📚', couleur: '#b4a4dc' },
-  musees: { label: 'Musées & culture', emoji: '🏛️', couleur: '#dfc48d' },
-  spectacles: { label: 'Théâtres & spectacles', emoji: '🎭', couleur: '#eaa3c2' },
-  animaux: { label: 'Animaux', emoji: '🐐', couleur: '#c8ad87' },
-  nature: { label: 'Balades & nature', emoji: '🥾', couleur: '#aecb8d' },
-  ateliers: { label: 'Activités & ateliers', emoji: '🎨', couleur: '#f4bc85' },
-  cinema: { label: 'Cinémas', emoji: '🎬', couleur: '#a1abdd' },
-  grillades: { label: 'Grillades & pique-nique', emoji: '🔥', couleur: '#eda58e' },
-  cafes: { label: 'Cafés & restaurants', emoji: '☕', couleur: '#d2ae97' },
-  parents: { label: 'Accueil parents-enfants', emoji: '🤱', couleur: '#f2acc0' },
+// Les catégories sont regroupées en grandes familles, chacune avec sa teinte
+// pastel. `fond` et `texte` habillent les puces de filtre et les badges ;
+// `couleur` reste la teinte saturée du marqueur, qui doit ressortir sur la
+// carte. Les variantes sombres sont explicites plutôt que calculées : un
+// color-mix donnait des résultats ternes et imprévisibles.
+const FAMILLES = {
+  nature: {
+    fond: '#faeeda', texte: '#412402',
+    fondSombre: '#3a2a12', texteSombre: '#f0d9ae',
+  },
+  eau: {
+    fond: '#e1f5ee', texte: '#04342c',
+    fondSombre: '#123029', texteSombre: '#a8ded0',
+  },
+  culture: {
+    fond: '#eeedfe', texte: '#26215c',
+    fondSombre: '#23214a', texteSombre: '#c3c0f0',
+  },
+  mouvement: {
+    fond: '#fde9e3', texte: '#6b2113',
+    fondSombre: '#3d2019', texteSombre: '#f2b9a6',
+  },
+  enfance: {
+    fond: '#fceaf1', texte: '#4b1528',
+    fondSombre: '#3d1b28', texteSombre: '#eeb3c8',
+  },
+  pause: {
+    fond: '#f7ede4', texte: '#4a2c1a',
+    fondSombre: '#372a20', texteSombre: '#dcc0a6',
+  },
+  saison: {
+    fond: '#fdeedb', texte: '#6b3a05',
+    fondSombre: '#3f2c11', texteSombre: '#f0c489',
+  },
 };
+
+// Chaque catégorie canonique : libellé, emoji, couleur du marqueur, famille.
+// Le texte posé sur ces aplats est toujours sombre, jamais blanc.
+const CATEGORIES = Object.fromEntries(
+  Object.entries({
+    parcs: { label: 'Parcs & aires de jeux', emoji: '🌳', couleur: '#8fc79b', famille: 'nature' },
+    eau: { label: "Pataugeoires & jeux d'eau", emoji: '💦', couleur: '#8fcbe8', famille: 'eau' },
+    piscines: { label: 'Piscines & baignade', emoji: '🏊', couleur: '#6fb8d8', famille: 'eau' },
+    sport: { label: 'Sport & mouvement', emoji: '🏃', couleur: '#7ec8c2', famille: 'mouvement' },
+    evenement: { label: 'Événements de saison', emoji: '⛺', couleur: '#f2a65a', famille: 'saison' },
+    couvert: { label: 'Jeux couverts', emoji: '🎪', couleur: '#f5a58d', famille: 'mouvement' },
+    biblio: { label: 'Bibliothèques & ludothèques', emoji: '📚', couleur: '#b4a4dc', famille: 'culture' },
+    musees: { label: 'Musées & culture', emoji: '🏛️', couleur: '#dfc48d', famille: 'culture' },
+    spectacles: { label: 'Théâtres & spectacles', emoji: '🎭', couleur: '#eaa3c2', famille: 'culture' },
+    animaux: { label: 'Animaux', emoji: '🐐', couleur: '#c8ad87', famille: 'enfance' },
+    nature: { label: 'Balades & nature', emoji: '🥾', couleur: '#aecb8d', famille: 'nature' },
+    ateliers: { label: 'Activités & ateliers', emoji: '🎨', couleur: '#f4bc85', famille: 'enfance' },
+    cinema: { label: 'Cinémas', emoji: '🎬', couleur: '#a1abdd', famille: 'culture' },
+    grillades: { label: 'Grillades & pique-nique', emoji: '🔥', couleur: '#eda58e', famille: 'nature' },
+    cafes: { label: 'Cafés & restaurants', emoji: '☕', couleur: '#d2ae97', famille: 'pause' },
+    parents: { label: 'Accueil parents-enfants', emoji: '🤱', couleur: '#f2acc0', famille: 'enfance' },
+  }).map(([id, c]) => [id, { ...c, ...FAMILLES[c.famille] }])
+);
 
 // Catégories reconnues à la lecture mais écartées de la carte : la carte vise
 // le loisir en famille.

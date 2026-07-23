@@ -1,0 +1,200 @@
+---
+import Base from '../layouts/Base.astro';
+import { EDITEUR } from '../consts';
+---
+
+<Base
+  titre="Mentions légales, Sorties enfants Genève"
+  description="Éditeur, hébergeur, traitement des données et formulaire de contact du site Sorties enfants Genève."
+>
+  <article class="page">
+    <p class="retour"><a href="/">← Retour à la carte</a></p>
+
+    <h1>Mentions légales</h1>
+
+    <h2>Éditeur du site</h2>
+    <p>
+      {EDITEUR}<br />
+      Site édité à titre personnel et non commercial.<br />
+      Contact&nbsp;: via le formulaire en bas de cette page.
+    </p>
+
+    <h2>Hébergeur</h2>
+    <p>
+      Netlify, Inc.<br />
+      44 Montgomery Street, Suite 300<br />
+      San Francisco, CA 94104, États-Unis<br />
+      <a href="https://www.netlify.com" target="_blank" rel="noopener">netlify.com</a>
+    </p>
+
+    <h2>Données personnelles et cookies</h2>
+    <p>
+      Ce site <strong>ne dépose aucun cookie</strong> et n'utilise aucun outil de mesure
+      d'audience ni de suivi publicitaire. Nous ne constituons aucun fichier de visiteurs.
+    </p>
+    <p>
+      Trois précisions, pour être complets&nbsp;:
+    </p>
+    <ul>
+      <li>
+        Votre choix de thème clair ou sombre est conservé dans le stockage local de votre
+        navigateur. Cette information reste sur votre appareil et ne nous est jamais transmise.
+      </li>
+      <li>
+        Le fond de carte est chargé depuis les serveurs d'OpenStreetMap et de CARTO. Comme pour
+        toute image chargée depuis un autre site, votre adresse IP leur est communiquée par votre
+        navigateur.
+      </li>
+      <li>
+        Si vous utilisez le formulaire ci-dessous, les informations saisies sont transmises et
+        conservées par Netlify pour nous être communiquées. Elles ne servent qu'à vous répondre et
+        ne sont ni revendues ni utilisées à d'autres fins.
+      </li>
+    </ul>
+
+    <h2>Contenu et responsabilité</h2>
+    <p>
+      Les informations rassemblées ici proviennent de sources publiques et de nos propres
+      recherches. Malgré le soin apporté, elles peuvent être incomplètes ou avoir vieilli.
+      Vérifiez les horaires et l'ouverture avant de vous déplacer. Notre responsabilité ne saurait
+      être engagée en cas d'erreur ou de déplacement inutile.
+    </p>
+
+    <h2>Nous écrire</h2>
+    <p>
+      Un lieu qui manque, une erreur, un endroit qui a fermé&nbsp;? Ce formulaire arrive
+      directement chez nous.
+    </p>
+
+    <form
+      name="contact"
+      method="POST"
+      data-netlify="true"
+      netlify-honeypot="bot-field"
+      action="/merci/"
+      class="formulaire"
+    >
+      {/* Netlify identifie le formulaire par ce champ dans la requête envoyée. */}
+      <input type="hidden" name="form-name" value="contact" />
+
+      {/* Piège à robots : invisible pour un humain, rempli par les automates. */}
+      <p class="cache">
+        <label>Ne remplissez pas ce champ&nbsp;: <input name="bot-field" tabindex="-1" /></label>
+      </p>
+
+      <p class="champ">
+        <label for="nom">Votre nom</label>
+        <input type="text" id="nom" name="nom" required autocomplete="name" />
+      </p>
+
+      <p class="champ">
+        <label for="email">Votre email</label>
+        <input type="email" id="email" name="email" required autocomplete="email" />
+      </p>
+
+      <p class="champ">
+        <label for="message">Votre message</label>
+        <textarea id="message" name="message" rows="6" required></textarea>
+      </p>
+
+      <p><button type="submit" class="bouton">Envoyer</button></p>
+    </form>
+  </article>
+</Base>
+
+<style>
+  .page {
+    max-width: 40rem;
+    margin: 0 auto;
+    padding: 1.5rem clamp(1rem, 5vw, 2rem) 5rem;
+    line-height: 1.7;
+  }
+
+  .retour a {
+    font-size: 0.88rem;
+    font-weight: 700;
+    text-decoration: none;
+  }
+
+  h1 {
+    font-size: clamp(1.6rem, 5vw, 2.1rem);
+    line-height: 1.15;
+    margin: 0.6rem 0 1.5rem;
+    letter-spacing: -0.02em;
+  }
+
+  h2 {
+    margin: 2.2rem 0 0.6rem;
+    font-size: 1.15rem;
+  }
+
+  p {
+    margin: 0 0 1rem;
+  }
+
+  ul {
+    margin: 0 0 1rem;
+    padding-left: 1.2rem;
+  }
+
+  li {
+    margin-bottom: 0.5rem;
+  }
+
+  /* --- Formulaire --- */
+
+  .formulaire {
+    margin-top: 1.2rem;
+    padding: 1.2rem;
+    border: 1px solid var(--bord);
+    border-radius: var(--rayon);
+    background: var(--carte);
+  }
+
+  .champ {
+    display: grid;
+    gap: 0.3rem;
+    margin-bottom: 1rem;
+  }
+
+  .champ label {
+    font-size: 0.86rem;
+    font-weight: 700;
+  }
+
+  .champ input,
+  .champ textarea {
+    width: 100%;
+    padding: 0.55rem 0.7rem;
+    border: 1px solid var(--bord-fort);
+    border-radius: var(--rayon-s);
+    background: var(--fond);
+    font: inherit;
+    color: inherit;
+  }
+
+  .champ textarea {
+    resize: vertical;
+  }
+
+  .champ input:focus-visible,
+  .champ textarea:focus-visible {
+    outline: 2px solid var(--accent-fort);
+    outline-offset: 1px;
+    border-color: var(--accent-fort);
+  }
+
+  .cache {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+  }
+
+  .formulaire button {
+    border: 0;
+    cursor: pointer;
+  }
+</style>

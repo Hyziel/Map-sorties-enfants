@@ -5,7 +5,52 @@ import 'leaflet/dist/leaflet.css';
 import 'leaflet.markercluster/dist/MarkerCluster.css';
 import 'leaflet.markercluster/dist/MarkerCluster.Default.css';
 
+import { SITE } from '../consts';
+
 const { stats, categories, communes } = donnees;
+
+// Données structurées : on décrit les sorties datées en Event, le seul type
+// qui s'applique vraiment ici. Les lieux permanents ne sont pas des événements
+// et resteraient un ItemList sans valeur ajoutée pour les moteurs.
+const evenements = donnees.lieux.filter((l) => l.periode?.fin);
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'ItemList',
+  name: 'Sorties et événements pour enfants à Genève',
+  numberOfItems: evenements.length,
+  itemListElement: evenements.map((l, i) => ({
+    '@type': 'ListItem',
+    position: i + 1,
+    item: {
+      '@type': 'Event',
+      name: l.nom,
+      startDate: l.periode!.debut || undefined,
+      endDate: l.periode!.fin || undefined,
+      eventStatus: 'https://schema.org/EventScheduled',
+      eventAttendanceMode: 'https://schema.org/OfflineEventAttendanceMode',
+      description: l.remarque || undefined,
+      url: `${SITE}/#lieu=${l.id}`,
+      isAccessibleForFree: l.prix === 'gratuit',
+      location: l.adresse
+        ? {
+            '@type': 'Place',
+            name: l.nom,
+            address: {
+              '@type': 'PostalAddress',
+              streetAddress: l.adresse,
+              addressLocality: l.commune || undefined,
+              postalCode: l.codePostal || undefined,
+              addressCountry: /^0\d/.test(l.codePostal) ? 'FR' : 'CH',
+            },
+            ...(l.lat !== null
+              ? { geo: { '@type': 'GeoCoordinates', latitude: l.lat, longitude: l.lon } }
+              : {}),
+          }
+        : undefined,
+    },
+  })),
+};
 
 const TRANCHES = [
   { id: '0', label: '0-1 an', age: 0 },
@@ -18,6 +63,7 @@ const TRANCHES = [
 
 <Base
   titre="Sorties enfants à Genève, la carte des idées"
+  schema={schema}
   description={`Carte de ${stats.sorties} sorties et activités pour enfants à Genève et dans le canton : parcs, pataugeoires, musées, ludothèques, ateliers. Filtres par âge, prix et météo.`}
 >
   <header class="entete">
@@ -99,7 +145,7 @@ const TRANCHES = [
               class="puce"
               data-cat={id}
               aria-pressed="false"
-              style={`--puce: ${c.couleur}`}
+              style={`--puce: ${c.couleur}; --puce-fond: ${c.fond}; --puce-texte: ${c.texte}; --puce-fond-sombre: ${c.fondSombre}; --puce-texte-sombre: ${c.texteSombre}`}
             >
               <span aria-hidden="true">{c.emoji}</span> {c.label}
             </button>
@@ -167,8 +213,9 @@ const TRANCHES = [
     gap: 0.75rem;
     flex-wrap: wrap;
     padding: 0.7rem clamp(0.75rem, 3vw, 1.5rem);
-    background: var(--carte);
-    border-bottom: 1px solid var(--bord);
+    background: var(--entete-fond);
+    color: var(--entete-texte);
+    border-bottom: 1px solid var(--entete-bord);
   }
 
   h1 {
@@ -179,19 +226,20 @@ const TRANCHES = [
   }
 
   .ge {
-    color: var(--accent-fort);
+    color: var(--entete-accent);
   }
 
   .compte {
     margin: 0;
     font-size: 0.85rem;
-    color: var(--encre-doux);
+    color: var(--entete-accent);
   }
 
   .lien-apropos {
     margin-left: auto;
     font-size: 0.82rem;
-    color: var(--encre-doux);
+    color: var(--entete-accent);
+    font-weight: 700;
   }
 
   /* --- Filtres --- */
@@ -402,11 +450,45 @@ const TRANCHES = [
     border-color: var(--puce);
   }
 
-  /* Encre foncée et non blanche : les pastels ne portent pas le blanc. */
+  /* Chaque famille de catégories a sa teinte pastel, posée en aplat au repos
+     et renforcée à la sélection. Le texte reste sombre : jamais de blanc. */
+  .puce {
+    background: var(--puce-fond);
+    border-color: color-mix(in srgb, var(--puce-texte) 18%, transparent);
+    color: var(--puce-texte);
+  }
+
   .puce[aria-pressed='true'] {
     background: var(--puce);
-    border-color: color-mix(in srgb, var(--puce) 70%, #6b5b52);
-    color: #33291f;
+    border-color: color-mix(in srgb, var(--puce-texte) 45%, transparent);
+    color: var(--puce-texte);
+    box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--puce-texte) 25%, transparent);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :global(:root:not([data-theme='clair'])) .puce {
+      background: var(--puce-fond-sombre);
+      border-color: color-mix(in srgb, var(--puce-texte-sombre) 22%, transparent);
+      color: var(--puce-texte-sombre);
+    }
+
+    :global(:root:not([data-theme='clair'])) .puce[aria-pressed='true'] {
+      /* Le pastel saturé reste clair : il porte l'encre foncée, comme en
+         thème clair. Un mélange avec le fond sombre tombait à 1.2 de contraste. */
+      background: var(--puce);
+      color: #241a16;
+    }
+  }
+
+  :global(:root[data-theme='sombre']) .puce {
+    background: var(--puce-fond-sombre);
+    border-color: color-mix(in srgb, var(--puce-texte-sombre) 22%, transparent);
+    color: var(--puce-texte-sombre);
+  }
+
+  :global(:root[data-theme='sombre']) .puce[aria-pressed='true'] {
+    background: var(--puce);
+    color: #241a16;
   }
 
   /* --- Bascule liste/carte (mobile) --- */
